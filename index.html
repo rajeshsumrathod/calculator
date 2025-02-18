@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Bending Schedule (BBS) Calculator</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        p {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        /* Input Fields */
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #34495e;
+            margin-top: 10px;
+            display: block;
+            text-align: left;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        /* Button */
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        /* Result Section */
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 8px;
+            border: 1px solid #bdc3c7;
+            display: none;
+            text-align: left;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+
+        .result strong {
+            font-size: 16px;
+            color: #34495e;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 500px) {
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 12px;
+            }
+
+            label {
+                font-size: 12px;
+            }
+
+            input, select {
+                padding: 10px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Bar Bending Schedule (BBS) Calculator</h2>
+        <p>This calculator follows Indian Standard Codes (IS: 456:2000, IS: 2502:1963).</p>
+
+        <!-- Input Fields -->
+        <label for="elementType">Structural Element Type:</label>
+        <select id="elementType">
+            <option value="beam">Beam</option>
+            <option value="column">Column</option>
+            <option value="slab">Slab</option>
+            <option value="footing">Footing</option>
+        </select>
+
+        <label for="barLength">Total Length of Bar (mm):</label>
+        <input type="number" id="barLength" placeholder="Enter total length in mm">
+
+        <label for="barDiameter">Diameter of Bar (mm):</label>
+        <input type="number" id="barDiameter" placeholder="Enter diameter in mm">
+
+        <label for="numBars">Number of Bars:</label>
+        <input type="number" id="numBars" placeholder="Enter number of bars">
+
+        <label for="concreteCover">Concrete Cover (mm):</label>
+        <input type="number" id="concreteCover" placeholder="Enter concrete cover in mm">
+
+        <label for="numBends">Number of Bends:</label>
+        <input type="number" id="numBends" placeholder="Enter number of bends (default=0)" value="0">
+
+        <label for="hookLength">Hook Length (mm):</label>
+        <input type="number" id="hookLength" placeholder="Enter hook length in mm (default=0)" value="0">
+
+        <label for="lapLength">Lap Length (mm):</label>
+        <input type="number" id="lapLength" placeholder="Enter lap length in mm (default=0)" value="0">
+
+        <label for="developmentLength">Development Length (mm):</label>
+        <input type="number" id="developmentLength" placeholder="Enter development length in mm">
+
+        <!-- Calculate Button -->
+        <button onclick="calculateBBS()">Calculate Weight</button>
+
+        <!-- Result Section -->
+        <div id="result" class="result">
+            <strong>Results:</strong><br>
+            <span id="output"></span>
+        </div>
+    </div>
+
+    <script>
+        function calculateWeight(diameter, length) {
+            // Formula: Weight (kg) = (D^2 / 162) * Length (m)
+            return ((diameter ** 2) / 162) * (length / 1000); // Convert length from mm to m
+        }
+
+        function calculateBBS() {
+            // Get input values
+            const elementType = document.getElementById('elementType').value;
+            const barLength = parseFloat(document.getElementById('barLength').value);
+            const barDiameter = parseFloat(document.getElementById('barDiameter').value);
+            const numBars = parseFloat(document.getElementById('numBars').value);
+            const concreteCover = parseFloat(document.getElementById('concreteCover').value);
+            const numBends = parseFloat(document.getElementById('numBends').value);
+            const hookLength = parseFloat(document.getElementById('hookLength').value || 9 * barDiameter); // Default hook length
+            const lapLength = parseFloat(document.getElementById('lapLength').value || 45 * barDiameter); // Default lap length
+            const developmentLength = parseFloat(document.getElementById('developmentLength').value);
+
+            // Validate inputs
+            if (isNaN(barLength) || isNaN(barDiameter) || isNaN(numBars) || isNaN(concreteCover) || isNaN(developmentLength) ||
+                barLength <= 0 || barDiameter <= 0 || numBars <= 0 || concreteCover < 0 || developmentLength <= 0) {
+                document.getElementById('result').innerHTML = "<strong>Please enter valid positive numbers for all fields.</strong>";
+                return;
+            }
+
+            // Adjust length per bar for concrete cover (subtract cover from both ends)
+            const adjustedLengthPerBar = barLength - (2 * concreteCover);
+
+            // Deduction for bends (2 × D per bend)
+            const deductionPerBend = 2 * barDiameter;
+            const totalDeductionForBends = numBends * deductionPerBend;
+
+            // Cutting length per bar (adjusted for bends, hooks, laps, and development length)
+            const cuttingLengthPerBar = adjustedLengthPerBar - totalDeductionForBends + hookLength + lapLength + developmentLength;
+
+            // Total length and weight
+            const totalLength = numBars * cuttingLengthPerBar;
+            const totalWeight = calculateWeight(barDiameter, totalLength);
+
+            // Display results
+            const output = `
+                <strong>Results:</strong><br>
+                Structural Element: ${elementType.charAt(0).toUpperCase() + elementType.slice(1)}<br>
+                Diameter of Bars: ${barDiameter} mm<br>
+                Number of Bars: ${numBars}<br>
+                Concrete Cover: ${concreteCover} mm<br>
+                Total Length of Each Bar (adjusted for cover): ${adjustedLengthPerBar.toFixed(2)} mm<br>
+                Cutting Length per Bar (adjusted for bends, hooks, laps, and development length): ${cuttingLengthPerBar.toFixed(2)} mm<br>
+                Total Length of Bars: ${totalLength.toFixed(2)} mm<br>
+                Total Weight of Bars: ${totalWeight.toFixed(2)} kg
+            `;
+            document.getElementById('output').innerHTML = output;
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
