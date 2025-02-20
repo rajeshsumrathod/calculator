@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TMT Bar Calculator (IS 1786:2008)</title>
+  <style>
+    /* CSS Styling */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .results {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .results p {
+      margin: 5px 0;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TMT Bar Calculator (IS 1786:2008)</h1>
+    <div class="calculator">
+      <label for="diameter">Bar Diameter (mm):</label>
+      <input type="number" id="diameter" placeholder="Enter diameter (e.g., 10)" step="any">
+
+      <label for="length">Bar Length (m):</label>
+      <input type="number" id="length" placeholder="Enter length in meters" step="any">
+
+      <button id="calculateBtn">Calculate</button>
+    </div>
+
+    <div class="results">
+      <h2>Results:</h2>
+      <p id="weightResult"></p>
+      <p id="bundleResult"></p>
+      <p id="bundleWeightResult"></p>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript Logic
+
+    // Function to calculate the weight of a single TMT bar per meter (IS 1786:2008)
+    function calculateTMTWeight(diameter) {
+      // Formula: Weight (kg/m) = Diameter² / 162
+      const weightPerMeter = (Math.pow(diameter, 2) / 162).toFixed(2);
+      return parseFloat(weightPerMeter);
+    }
+
+    // Function to determine the number of bars in one bundle (IS standards)
+    function getBarsInBundle(diameter) {
+      const bundleCounts = {
+        8: 10,   // 8mm: 10 bars per bundle
+        10: 7,   // 10mm: 7 bars per bundle
+        12: 5,   // 12mm: 5 bars per bundle
+        16: 3,   // 16mm: 3 bars per bundle
+        20: 2,   // 20mm: 2 bars per bundle
+        25: 1,   // 25mm: 1 bar per bundle
+        32: 1    // 32mm: 1 bar per bundle
+      };
+      return bundleCounts[diameter] || "Not available";
+    }
+
+    // Event Listener for Calculate Button
+    document.getElementById('calculateBtn').addEventListener('click', () => {
+      // Get user inputs
+      const diameter = parseFloat(document.getElementById('diameter').value);
+      const length = parseFloat(document.getElementById('length').value);
+
+      // Validate inputs
+      if (isNaN(diameter) || isNaN(length) || diameter <= 0 || length <= 0) {
+        alert("Please enter valid values for diameter and length.");
+        return;
+      }
+
+      // Calculate weight of one bar
+      const weightPerMeter = calculateTMTWeight(diameter);
+      const weightOfOneBarKg = (weightPerMeter * length).toFixed(2); // Weight in kg
+      const weightOfOneBarTon = (weightOfOneBarKg / 1000).toFixed(4); // Convert to tons
+
+      // Determine number of bars in one bundle (IS standards)
+      const barsInBundle = getBarsInBundle(diameter);
+
+      // Calculate total weight of the bundle
+      const bundleWeightKg = (barsInBundle !== "Not available")
+        ? (barsInBundle * weightOfOneBarKg).toFixed(2) + " kg"
+        : "Not available";
+
+      const bundleWeightTon = (barsInBundle !== "Not available")
+        ? ((barsInBundle * weightOfOneBarKg) / 1000).toFixed(4) + " tons"
+        : "Not available";
+
+      // Display results
+      document.getElementById('weightResult').textContent = 
+        `Weight of one ${diameter}mm bar (${length}m): ${weightOfOneBarKg} kg (${weightOfOneBarTon} tons)`;
+
+      document.getElementById('bundleResult').textContent = 
+        `Number of ${diameter}mm bars in one bundle: ${barsInBundle}`;
+
+      document.getElementById('bundleWeightResult').textContent = 
+        `Total weight of one bundle: ${bundleWeightKg} (${bundleWeightTon})`;
+    });
+  </script>
+</body>
+</html>
