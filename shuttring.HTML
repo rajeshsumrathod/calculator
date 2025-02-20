@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shuttering Material Calculator (Indian Standards)</title>
+  <style>
+    /* CSS Styling */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 450px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .results {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .results p {
+      margin: 5px 0;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Shuttering Material Calculator (Indian Standards)</h1>
+    <div class="calculator">
+      <label for="length">Length of Formwork (m):</label>
+      <input type="number" id="length" placeholder="Enter length in meters" step="any">
+
+      <label for="height">Height of Formwork (m):</label>
+      <input type="number" id="height" placeholder="Enter height in meters" step="any">
+
+      <label for="materialType">Type of Shuttering Material:</label>
+      <select id="materialType">
+        <option value="plywood">Plywood (3 m² per sheet)</option>
+        <option value="mivan">Mivan (4 m² per panel)</option>
+        <option value="steel">Steel Plate (5 m² per plate)</option>
+      </select>
+
+      <label for="beamSpacing">Wooden Beam Spacing (m):</label>
+      <input type="number" id="beamSpacing" placeholder="Enter beam spacing (e.g., 0.5)" step="any">
+
+      <label for="nailsPerSqm">Nails per Square Meter:</label>
+      <input type="number" id="nailsPerSqm" placeholder="Enter nails per m² (e.g., 100)" step="any">
+
+      <button id="calculateBtn">Calculate</button>
+    </div>
+
+    <div class="results">
+      <h2>Results:</h2>
+      <p id="areaResult"></p>
+      <p id="materialResult"></p>
+      <p id="woodBeamResult"></p>
+      <p id="nailResult"></p>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript Logic
+
+    // Event Listener for Calculate Button
+    document.getElementById('calculateBtn').addEventListener('click', () => {
+      // Get user inputs
+      const length = parseFloat(document.getElementById('length').value);
+      const height = parseFloat(document.getElementById('height').value);
+      const materialType = document.getElementById('materialType').value;
+      const beamSpacing = parseFloat(document.getElementById('beamSpacing').value);
+      const nailsPerSqm = parseFloat(document.getElementById('nailsPerSqm').value);
+
+      // Validate inputs
+      if (
+        isNaN(length) || isNaN(height) || isNaN(beamSpacing) ||
+        isNaN(nailsPerSqm) || length <= 0 || height <= 0 ||
+        beamSpacing <= 0 || nailsPerSqm <= 0
+      ) {
+        alert("Please enter valid values for all fields.");
+        return;
+      }
+
+      // Calculate total area of formwork
+      const totalArea = (length * height).toFixed(2);
+
+      // Material coverage based on type (as per Indian Standards)
+      let materialCoverage = 0;
+      let materialUnit = "";
+      switch (materialType) {
+        case "plywood":
+          materialCoverage = 3; // Plywood covers 3 m² per sheet
+          materialUnit = "sheets";
+          break;
+        case "mivan":
+          materialCoverage = 4; // Mivan covers 4 m² per panel
+          materialUnit = "panels";
+          break;
+        case "steel":
+          materialCoverage = 5; // Steel plates cover 5 m² per plate
+          materialUnit = "plates";
+          break;
+        default:
+          alert("Invalid material type selected.");
+          return;
+      }
+
+      // Calculate material requirements
+      const materialRequired = Math.ceil(totalArea / materialCoverage); // Number of material units
+      const woodBeams = Math.ceil((length / beamSpacing) * height); // Number of wooden beams
+      const nails = Math.ceil(totalArea * nailsPerSqm); // Total nails required
+
+      // Display results
+      document.getElementById('areaResult').textContent = `Total Formwork Area: ${totalArea} m²`;
+      document.getElementById('materialResult').textContent = `${materialType.charAt(0).toUpperCase() + materialType.slice(1)} Required: ${materialRequired} ${materialUnit}`;
+      document.getElementById('woodBeamResult').textContent = `Wooden Beams Required: ${woodBeams}`;
+      document.getElementById('nailResult').textContent = `Nails Required: ${nails}`;
+    });
+  </script>
+</body>
+</html>
