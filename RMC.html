@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RMC Calculator</title>
+  <style>
+    /* CSS Styling */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #cfc1c1af;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .calculator, .results {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .results ul {
+      list-style-type: none;
+      padding: 0;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    .results li {
+      background: #b22828;
+      margin: 5px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>RMC Calculator</h1>
+    <div class="calculator">
+      <h2>Calculate Volume</h2>
+      <label for="objectName">Object Name:</label>
+      <input type="text" id="objectName" placeholder="Enter object name">
+
+      <label for="length">Length (m):</label>
+      <input type="number" step="any" id="length" placeholder="Enter length">
+
+      <label for="width">Width (m):</label>
+      <input type="number" step="any" id="width" placeholder="Enter width">
+
+      <label for="height">Height (m):</label>
+      <input type="number" step="any" id="height" placeholder="Enter height">
+
+      <button id="calculateBtn">Calculate Volume</button>
+    </div>
+
+    <div class="results">
+      <h2>Saved Calculations</h2>
+      <ul id="calculationsList"></ul>
+      <button id="clearBtn">Clear All Calculations</button>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript Logic
+
+    // Object to store calculations
+    const calculations = {};
+
+    // DOM Elements
+    const objectNameInput = document.getElementById('objectName');
+    const lengthInput = document.getElementById('length');
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const calculationsList = document.getElementById('calculationsList');
+
+    // Function to calculate volume
+    function calculateVolume() {
+      const objectName = objectNameInput.value.trim();
+      const length = parseFloat(lengthInput.value);
+      const width = parseFloat(widthInput.value);
+      const height = parseFloat(heightInput.value);
+
+      // Validate inputs
+      if (!objectName || isNaN(length) || isNaN(width) || isNaN(height)) {
+        alert("Please enter valid values for all fields.");
+        return;
+      }
+
+      // Calculate volume
+      const volume = length * width * height;
+
+      // Save calculation
+      calculations[objectName] = volume.toFixed(2);
+
+      // Update the saved calculations list
+      updateCalculationsList();
+
+      // Clear input fields
+      objectNameInput.value = '';
+      lengthInput.value = '';
+      widthInput.value = '';
+      heightInput.value = '';
+    }
+
+    // Function to update the saved calculations list
+    function updateCalculationsList() {
+      calculationsList.innerHTML = ''; // Clear the list
+
+      for (const [objectName, volume] of Object.entries(calculations)) {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${objectName}: ${volume} m³`;
+        calculationsList.appendChild(listItem);
+      }
+    }
+
+    // Function to clear all calculations
+    function clearCalculations() {
+      calculationsList.innerHTML = ''; // Clear the list
+      Object.keys(calculations).forEach(key => delete calculations[key]); // Clear the object
+      alert("All calculations have been cleared.");
+    }
+
+    // Event Listeners
+    calculateBtn.addEventListener('click', calculateVolume);
+    clearBtn.addEventListener('click', clearCalculations);
+  </script>
+</body>
+</html>
