@@ -7,28 +7,33 @@
   <style>
     /* CSS Styling */
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
+      font-family: 'Courier New', Courier, monospace; /* Handwriting-style font */
+      background-color: #f9e4b7; /* Light beige background for a notebook feel */
       margin: 0;
       padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      background-image: url('https://www.transparenttextures.com/patterns/old-paper.png'); /* Paper texture */
+      background-size: cover;
     }
 
     .container {
-      background: #fff;
+      background: #fffdf2; /* Off-white color for sticky note */
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2); /* Shadow for sticky note effect */
       width: 350px;
       text-align: center;
+      position: relative;
     }
 
     h1 {
       margin-bottom: 20px;
-      color: #333;
+      color: #d35400; /* Orange color for heading */
+      font-size: 24px;
+      font-weight: bold;
     }
 
     label {
@@ -44,21 +49,23 @@
       margin-top: 5px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-family: 'Courier New', Courier, monospace; /* Consistent handwriting font */
     }
 
     button {
       margin-top: 15px;
       padding: 10px 15px;
-      background-color: #007bff;
+      background-color: #e67e22; /* Orange button */
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
       font-size: 16px;
+      font-family: 'Courier New', Courier, monospace; /* Consistent handwriting font */
     }
 
     button:hover {
-      background-color: #0056b3;
+      background-color: #d35400; /* Darker orange on hover */
     }
 
     .results {
@@ -68,15 +75,31 @@
 
     .results p {
       margin: 5px 0;
-      font-size: 16px;
-      color: #333;
+      font-size: 14px;
+      color: #555;
+      font-family: 'Courier New', Courier, monospace; /* Consistent handwriting font */
+    }
+
+    /* Sticky note pin effect */
+    .pin {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 20px;
+      background: #d35400; /* Orange pin */
+      border-radius: 50%;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1> Rathod</h1>
-    <h1> TMT Bar Calculator</h1>
+    <!-- Sticky note pin -->
+    <div class="pin"></div>
+    <h1>Rathod</h1>
+    <h1>TMT Bar Calculator</h1>
     <div class="calculator">
       <label for="diameter">Bar Diameter (mm):</label>
       <input type="number" id="diameter" placeholder="Enter diameter (e.g., 10)" step="any">
@@ -102,7 +125,6 @@
 
   <script>
     // JavaScript Logic
-
     // Function to calculate the weight of a single TMT bar per meter (IS 1786:2008)
     function calculateTMTWeight(diameter) {
       // Formula: Weight (kg/m) = Diameter² / 162
