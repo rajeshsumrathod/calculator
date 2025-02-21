@@ -75,13 +75,16 @@
 </head>
 <body>
   <div class="container">
-    <h1>TMT Bar Calculator (IS 1786:2008)</h1>
+    <h1>TMT Bar Calculator</h1>
     <div class="calculator">
       <label for="diameter">Bar Diameter (mm):</label>
       <input type="number" id="diameter" placeholder="Enter diameter (e.g., 10)" step="any">
 
       <label for="length">Bar Length (m):</label>
       <input type="number" id="length" placeholder="Enter length in meters" step="any">
+
+      <label for="bundleQuantity">Number of Bundles:</label>
+      <input type="number" id="bundleQuantity" placeholder="Enter number of bundles" step="1" min="1">
 
       <button id="calculateBtn">Calculate</button>
     </div>
@@ -90,7 +93,9 @@
       <h2>Results:</h2>
       <p id="weightResult"></p>
       <p id="bundleResult"></p>
+      <p id="totalBarsResult"></p>
       <p id="bundleWeightResult"></p>
+      <p id="totalBundleWeightResult"></p>
     </div>
   </div>
 
@@ -107,11 +112,11 @@
     // Function to determine the number of bars in one bundle (IS standards)
     function getBarsInBundle(diameter) {
       const bundleCounts = {
-        8: 10,   // 8mm: 10 bars per bundle
-        10: 7,   // 10mm: 7 bars per bundle
-        12: 5,   // 12mm: 5 bars per bundle
-        16: 3,   // 16mm: 3 bars per bundle
-        20: 2,   // 20mm: 2 bars per bundle
+        8: 17,   // 8mm: 17 bars per bundle
+        10: 11,  // 10mm: 11 bars per bundle
+        12: 8,   // 12mm: 8 bars per bundle
+        16: 4,   // 16mm: 4 bars per bundle
+        20: 3,   // 20mm: 3 bars per bundle
         25: 1,   // 25mm: 1 bar per bundle
         32: 1    // 32mm: 1 bar per bundle
       };
@@ -123,10 +128,14 @@
       // Get user inputs
       const diameter = parseFloat(document.getElementById('diameter').value);
       const length = parseFloat(document.getElementById('length').value);
+      const bundleQuantity = parseInt(document.getElementById('bundleQuantity').value);
 
       // Validate inputs
-      if (isNaN(diameter) || isNaN(length) || diameter <= 0 || length <= 0) {
-        alert("Please enter valid values for diameter and length.");
+      if (
+        isNaN(diameter) || isNaN(length) || isNaN(bundleQuantity) ||
+        diameter <= 0 || length <= 0 || bundleQuantity <= 0
+      ) {
+        alert("Please enter valid values for diameter, length, and bundle quantity.");
         return;
       }
 
@@ -138,13 +147,27 @@
       // Determine number of bars in one bundle (IS standards)
       const barsInBundle = getBarsInBundle(diameter);
 
-      // Calculate total weight of the bundle
+      // Calculate total weight of one bundle
       const bundleWeightKg = (barsInBundle !== "Not available")
         ? (barsInBundle * weightOfOneBarKg).toFixed(2) + " kg"
         : "Not available";
 
       const bundleWeightTon = (barsInBundle !== "Not available")
         ? ((barsInBundle * weightOfOneBarKg) / 1000).toFixed(4) + " tons"
+        : "Not available";
+
+      // Calculate total number of bars
+      const totalBars = (barsInBundle !== "Not available")
+        ? bundleQuantity * barsInBundle
+        : "Not available";
+
+      // Calculate total weight for the specified number of bundles
+      const totalBundleWeightKg = (barsInBundle !== "Not available")
+        ? (bundleQuantity * barsInBundle * weightOfOneBarKg).toFixed(2) + " kg"
+        : "Not available";
+
+      const totalBundleWeightTon = (barsInBundle !== "Not available")
+        ? ((bundleQuantity * barsInBundle * weightOfOneBarKg) / 1000).toFixed(4) + " tons"
         : "Not available";
 
       // Display results
@@ -154,8 +177,14 @@
       document.getElementById('bundleResult').textContent = 
         `Number of ${diameter}mm bars in one bundle: ${barsInBundle}`;
 
+      document.getElementById('totalBarsResult').textContent = 
+        `Total number of bars for ${bundleQuantity} bundles: ${totalBars}`;
+
       document.getElementById('bundleWeightResult').textContent = 
         `Total weight of one bundle: ${bundleWeightKg} (${bundleWeightTon})`;
+
+      document.getElementById('totalBundleWeightResult').textContent = 
+        `Total weight for ${bundleQuantity} bundles: ${totalBundleWeightKg} (${totalBundleWeightTon})`;
     });
   </script>
 </body>
