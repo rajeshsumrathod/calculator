@@ -261,7 +261,6 @@
   
 
       // Add saved calculations
-      outputText += "\nSaved Calculations:\n";
       if (Object.keys(calculations).length > 0) {
         for (const [objectName, volume] of Object.entries(calculations)) {
           outputText += `- ${objectName}: ${volume} m³\n`;
