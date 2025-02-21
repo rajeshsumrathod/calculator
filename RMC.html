@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RMC Calculator with Note Box</title>
+  <title>RMC Calculator with WhatsApp Sharing</title>
   <style>
     /* CSS Styling */
     body {
@@ -144,6 +144,7 @@
 
     <!-- Note Box -->
     <div class="note-box">
+      <h2>Note Box</h2>
       <textarea id="noteInput" placeholder="Write your notes here..."></textarea>
       <button id="saveNoteBtn">Save Note</button>
       <p id="savedNote" class="saved-note"></p>
@@ -151,7 +152,7 @@
 
     <!-- RMC Calculator -->
     <div class="calculator">
-      <h2> RMC Calculator Calculate Volume</h2>
+      <h2>Calculate Volume</h2>
       <label for="objectName">Object Name:</label>
       <input type="text" id="objectName" placeholder="Enter object name">
 
@@ -164,7 +165,7 @@
       <label for="height">Height (m):</label>
       <input type="number" step="any" id="height" placeholder="Enter height">
 
-      <button id="calculateBtn">  Calculate Volume</button>
+      <button id="calculateBtn">Calculate Volume</button>
     </div>
 
     <div class="results">
@@ -172,6 +173,7 @@
       <ul id="calculationsList"></ul>
       <p class="total" id="totalVolume">Total Volume: 0.00 m³</p>
       <button id="clearBtn">Clear All Calculations</button>
+      <button id="shareToWhatsAppBtn">Share to WhatsApp</button>
     </div>
   </div>
 
@@ -245,6 +247,42 @@
       }
       savedNote.textContent = `Note: ${noteText}`;
       noteInput.value = ''; // Clear the input field
+    });
+
+    // JavaScript Logic for Share to WhatsApp
+    const shareToWhatsAppBtn = document.getElementById('shareToWhatsAppBtn');
+
+    shareToWhatsAppBtn.addEventListener('click', () => {
+      let outputText = "RMC Calculator Output\n";
+      outputText += "=====================\n";
+
+      // Add saved note
+      const note = savedNote.textContent.trim();
+      if (note) {
+        outputText += `\nNote: ${note}\n`;
+      } else {
+        outputText += "\nNo note saved.\n";
+      }
+
+      // Add saved calculations
+      outputText += "\nSaved Calculations:\n";
+      if (Object.keys(calculations).length > 0) {
+        for (const [objectName, volume] of Object.entries(calculations)) {
+          outputText += `- ${objectName}: ${volume} m³\n`;
+        }
+        outputText += `\nTotal Volume: ${parseFloat(totalVolumeElement.textContent.split(": ")[1]).toFixed(2)} m³\n`;
+      } else {
+        outputText += "No calculations saved.\n";
+      }
+
+      // Encode the output text for WhatsApp sharing
+      const encodedMessage = encodeURIComponent(outputText);
+
+      // Create the WhatsApp link
+      const whatsappLink = `https://wa.me/?text=${encodedMessage}`;
+
+      // Open WhatsApp in a new tab
+      window.open(whatsappLink, '_blank');
     });
   </script>
 </body>
