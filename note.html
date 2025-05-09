@@ -30,31 +30,35 @@
       left: 50%;
       transform: translateX(-50%);
     }
+    .tool-button {
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
   </style>
 </head>
-<h1>Rajesh Rathod Notes</h1>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center p-4">
-
   <h1 class="text-3xl font-bold mb-6">✍️ Notes App – Fixed Edition</h1>
-
   <div class="w-full max-w-2xl bg-white p-6 rounded-lg shadow-md mb-6">
     <textarea id="noteText" class="w-full p-2 border rounded mb-4" rows="4" placeholder="Enter your note..."></textarea>
-
     <div class="mb-4 relative">
       <canvas id="drawingCanvas" width="500" height="300" tabindex="0"></canvas>
     </div>
 
-    <div class="flex space-x-2 mb-4 flex-wrap gap-2">
-      <button onclick="setTool('free')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Free Draw</button>
-      <button onclick="setTool('rectangle')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Rectangle</button>
-      <button onclick="setTool('circle')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Circle</button>
-      <button onclick="setTool('line')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Line</button>
-      <button onclick="setTool('text')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Text</button>
-      <button onclick="setTool('select')" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Select</button>
-      <button onclick="setTool('eraser')" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Eraser</button>
-      <button onclick="clearCanvas()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Clear Canvas</button>
+    <!-- Tool Buttons -->
+    <div class="flex flex-wrap gap-2 mb-4 overflow-x-auto pb-2">
+      <button class="tool-button bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" data-tool="free">Free Draw</button>
+      <button class="tool-button bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" data-tool="rectangle">Rectangle</button>
+      <button class="tool-button bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" data-tool="circle">Circle</button>
+      <button class="tool-button bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" data-tool="line">Line</button>
+      <button class="tool-button bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" data-tool="text">Text</button>
+      <button class="tool-button bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" data-tool="select">Select</button>
+      <button class="tool-button bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600" data-tool="eraser">Eraser</button>
+      <button class="tool-button bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" onclick="clearCanvas()">Clear Canvas</button>
+    </div>
 
-      <input type="color" id="penColor" value="#000000" class="h-10">
+    <!-- Other Controls -->
+    <div class="flex flex-wrap gap-4 items-center mb-4">
+      <input type="color" id="penColor" value="#000000" class="h-10 w-12">
       <div class="flex items-center">
         <label for="penWidth" class="mr-2">Size:</label>
         <input type="range" id="penWidth" min="1" max="50" value="2" class="w-24">
@@ -63,10 +67,10 @@
 
     <div class="mb-4">
       <input type="file" id="imageUpload" accept="image/*" multiple class="mb-2">
-      <div id="imagePreview" class="flex flex-wrap gap-2"></div>
+      <div id="imagePreview" class="flex flex-wrap gap-2 mt-2"></div>
     </div>
 
-    <div class="flex space-x-2">
+    <div class="flex flex-wrap gap-2">
       <button onclick="saveNote()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Save Note</button>
       <button onclick="downloadNoteAsPNG()" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Download PNG</button>
       <button onclick="downloadNoteAsPDF()" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Export PDF</button>
@@ -94,44 +98,44 @@
     const ctx = canvas.getContext("2d");
     const zoomCanvas = document.getElementById("zoomCanvas");
     const zoomCtx = zoomCanvas.getContext("2d");
-
     let drawing = false;
     let startX = 0, startY = 0;
     let currentTool = "free";
     let shapes = [];
     let selectedShape = null;
-    let zoomState = {
-      image: null,
-      zoom: 1,
-      offsetX: 0,
-      offsetY: 0
-    };
+    let zoomState = { image: null, zoom: 1, offsetX: 0, offsetY: 0 };
+    let textInputState = { active: false, x: 0, y: 0, text: "", color: "#000", fontSize: 20 };
 
-    // Text Input State
-    let textInputState = {
-      active: false,
-      x: 0,
-      y: 0,
-      text: "",
-      color: "#000",
-      fontSize: 20
-    };
+    // Set tool using event delegation
+    document.body.addEventListener("click", function(e) {
+      if (e.target.matches(".tool-button")) {
+        const tool = e.target.getAttribute("data-tool");
+        setTool(tool);
+      }
+    });
 
     function setTool(tool) {
       currentTool = tool;
       if (textInputState.active) stopTextInput(false);
       selectedShape = null;
-
       canvas.style.cursor = tool === 'select' ? 'default' : tool === 'eraser' ? 'none' : 'crosshair';
       redrawCanvas();
     }
 
+    function getMousePos(evt) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+      };
+    }
+
     function startDrawing(e) {
       if (textInputState.active) return;
-
+      const pos = getMousePos(e);
       drawing = true;
-      startX = e.offsetX;
-      startY = e.offsetY;
+      startX = pos.x;
+      startY = pos.y;
 
       if (currentTool === "free") {
         shapes.push({ type: "path", points: [{ x: startX, y: startY }], ...getStyle() });
@@ -142,42 +146,35 @@
       } else if (currentTool === "eraser") {
         eraseAt(startX, startY);
       }
+      ctx.beginPath();
     }
 
     function draw(e) {
-      const x = e.offsetX;
-      const y = e.offsetY;
-
+      const pos = getMousePos(e);
       if (!drawing && currentTool !== "select" && currentTool !== "eraser") return;
 
       if (currentTool === "free" && drawing) {
-        const lastPath = shapes[shapes.length - 1];
-        lastPath.points.push({ x, y });
+        const path = shapes[shapes.length - 1];
+        path.points.push(pos);
         redrawCanvas();
       } else if (currentTool === "rectangle" && drawing) {
         redrawCanvas();
-        ctx.beginPath();
-        ctx.strokeRect(startX, startY, x - startX, y - startY);
+        ctx.strokeRect(startX, startY, pos.x - startX, pos.y - startY);
       } else if (currentTool === "circle" && drawing) {
         redrawCanvas();
+        const radius = Math.hypot(pos.x - startX, pos.y - startY);
         ctx.beginPath();
-        const radius = Math.hypot(x - startX, y - startY);
         ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
         ctx.stroke();
       } else if (currentTool === "line" && drawing) {
         redrawCanvas();
         ctx.beginPath();
         ctx.moveTo(startX, startY);
-        ctx.lineTo(x, y);
+        ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
       } else if (currentTool === "eraser" && drawing) {
-        eraseAt(x, y);
-      } else if (currentTool === "select" && selectedShape && isMoving) {
-        moveShape(selectedShape, x - startX, y - startY);
-        startX = x;
-        startY = y;
+        eraseAt(pos.x, pos.y);
       }
-
       if (currentTool !== "select" && currentTool !== "text") {
         ctx.strokeStyle = getStyle().color;
         ctx.lineWidth = getStyle().lineWidth;
@@ -185,27 +182,27 @@
       }
     }
 
-    function stopDrawing() {
+    function stopDrawing(e) {
       if (drawing && currentTool === "rectangle") {
         shapes.push({
           type: "rectangle",
           x: startX,
           y: startY,
-          width: e.offsetX - startX,
-          height: e.offsetY - startY,
+          width: getMousePos(e).x - startX,
+          height: getMousePos(e).y - startY,
           ...getStyle()
         });
-      } else if (currentTool === "line") {
+      } else if (drawing && currentTool === "line") {
         shapes.push({
           type: "line",
           x1: startX,
           y1: startY,
-          x2: e.offsetX,
-          y2: e.offsetY,
+          x2: getMousePos(e).x,
+          y2: getMousePos(e).y,
           ...getStyle()
         });
-      } else if (currentTool === "circle") {
-        const r = Math.hypot(e.offsetX - startX, e.offsetY - startY);
+      } else if (drawing && currentTool === "circle") {
+        const r = Math.hypot(getMousePos(e).x - startX, getMousePos(e).y - startY);
         shapes.push({
           type: "circle",
           x: startX,
@@ -214,7 +211,6 @@
           ...getStyle()
         });
       }
-
       drawing = false;
       redrawCanvas();
     }
@@ -264,7 +260,6 @@
     function handleKeyDown(e) {
       if (!textInputState.active) return;
       e.preventDefault();
-
       if (e.key === "Enter") {
         stopTextInput(true);
       } else if (e.key === "Escape") {
@@ -280,13 +275,11 @@
 
     function redrawCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       shapes.forEach(shape => {
         ctx.strokeStyle = shape.color || "#000";
         ctx.fillStyle = shape.color || "#000";
         ctx.lineWidth = shape.lineWidth || 2;
         ctx.font = `${shape.fontSize}px Arial`;
-
         if (shape.type === "path") {
           ctx.beginPath();
           for (let i = 1; i < shape.points.length; i++) {
@@ -308,7 +301,6 @@
         } else if (shape.type === "text") {
           ctx.fillText(shape.text, shape.x, shape.y);
         }
-
         if (shape === selectedShape && currentTool === "select") {
           ctx.strokeStyle = "blue";
           ctx.setLineDash([5, 5]);
@@ -321,7 +313,6 @@
           ctx.setLineDash([]);
         }
       });
-
       if (textInputState.active) {
         ctx.font = `${textInputState.fontSize}px Arial`;
         ctx.fillStyle = textInputState.color;
@@ -400,7 +391,6 @@
       const text = document.getElementById("noteText").value;
       const canvasData = canvas.toDataURL("image/png");
       const images = Array.from(document.querySelectorAll("#imagePreview img")).map(img => img.src);
-
       const notes = JSON.parse(localStorage.getItem("notes")) || [];
       notes.unshift({ id: Date.now(), text, canvasData, images });
       localStorage.setItem("notes", JSON.stringify(notes));
@@ -413,9 +403,7 @@
     function displayNotes() {
       const list = document.getElementById("notesList");
       list.innerHTML = "";
-
       const notes = JSON.parse(localStorage.getItem("notes")) || [];
-
       notes.forEach(note => {
         const card = document.createElement("div");
         card.className = "note-card bg-white p-4 rounded shadow mb-4";
@@ -501,7 +489,6 @@
     function redrawZoomCanvas() {
       zoomCtx.clearRect(0, 0, zoomCanvas.width, zoomCanvas.height);
       if (!zoomState.image) return;
-
       zoomCtx.save();
       zoomCtx.translate(zoomCanvas.width / 2, zoomCanvas.height / 2);
       zoomCtx.scale(zoomState.zoom, zoomState.zoom);
@@ -514,7 +501,6 @@
       const files = e.target.files;
       const preview = document.getElementById("imagePreview");
       preview.innerHTML = "";
-
       for (const file of files) {
         const img = document.createElement("img");
         img.src = URL.createObjectURL(file);
@@ -541,96 +527,6 @@
       img.src = src;
     }
 
-    function getMousePos(evt) {
-      const rect = canvas.getBoundingClientRect();
-      return {
-        x: evt.clientX - rect.left,
-        y: evt.clientY - rect.top
-      };
-    }
-
-    // Event Listeners
-    canvas.addEventListener("mousedown", (e) => {
-      const pos = getMousePos(e);
-      drawing = true;
-      startX = pos.x;
-      startY = pos.y;
-      if (currentTool === "free") {
-        shapes.push({ type: "path", points: [{ x: startX, y: startY }], ...getStyle() });
-      } else if (currentTool === "text") {
-        startTextInput(startX, startY);
-      } else if (currentTool === "select") {
-        selectedShape = findShapeAt(startX, startY);
-      } else if (currentTool === "eraser") {
-        eraseAt(startX, startY);
-      }
-      ctx.beginPath();
-    });
-
-    canvas.addEventListener("mousemove", (e) => {
-      const pos = getMousePos(e);
-      if (!drawing) return;
-
-      if (currentTool === "free") {
-        const path = shapes[shapes.length - 1];
-        path.points.push(pos);
-        redrawCanvas();
-      } else if (currentTool === "rectangle") {
-        redrawCanvas();
-        ctx.strokeRect(startX, startY, pos.x - startX, pos.y - startY);
-      } else if (currentTool === "circle") {
-        redrawCanvas();
-        const radius = Math.hypot(pos.x - startX, pos.y - startY);
-        ctx.beginPath();
-        ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
-        ctx.stroke();
-      } else if (currentTool === "line") {
-        redrawCanvas();
-        ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-      } else if (currentTool === "eraser") {
-        eraseAt(pos.x, pos.y);
-      }
-    });
-
-    canvas.addEventListener("mouseup", () => {
-      if (drawing && currentTool === "rectangle") {
-        shapes.push({
-          type: "rectangle",
-          x: startX,
-          y: startY,
-          width: getMousePos(event).x - startX,
-          height: getMousePos(event).y - startY,
-          ...getStyle()
-        });
-      } else if (drawing && currentTool === "line") {
-        shapes.push({
-          type: "line",
-          x1: startX,
-          y1: startY,
-          x2: getMousePos(event).x,
-          y2: getMousePos(event).y,
-          ...getStyle()
-        });
-      } else if (drawing && currentTool === "circle") {
-        const r = Math.hypot(getMousePos(event).x - startX, getMousePos(event).y - startY);
-        shapes.push({
-          type: "circle",
-          x: startX,
-          y: startY,
-          radius: r,
-          ...getStyle()
-        });
-      }
-      drawing = false;
-      redrawCanvas();
-    });
-
-    canvas.addEventListener("keydown", handleKeyDown);
-    canvas.addEventListener("dblclick", handleDoubleClick);
-
     function handleDoubleClick(e) {
       const pos = getMousePos(e);
       const shape = findShapeAt(pos.x, pos.y);
@@ -648,12 +544,37 @@
       }
     }
 
-    function getStyle() {
-      return {
-        color: document.getElementById("penColor").value,
-        lineWidth: document.getElementById("penWidth").value
-      };
-    }
+    // Mouse Events
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("keydown", handleKeyDown);
+    canvas.addEventListener("dblclick", handleDoubleClick);
+
+    // Touch Events for Mobile
+    canvas.addEventListener("touchstart", function(e) {
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent("mousedown", {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      canvas.dispatchEvent(mouseEvent);
+    }, false);
+
+    canvas.addEventListener("touchmove", function(e) {
+      const touch = e.touches[0];
+      const mouseEvent = new MouseEvent("mousemove", {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      });
+      canvas.dispatchEvent(mouseEvent);
+      e.preventDefault();
+    }, false);
+
+    canvas.addEventListener("touchend", function() {
+      const mouseEvent = new MouseEvent("mouseup");
+      canvas.dispatchEvent(mouseEvent);
+    }, false);
 
     displayNotes();
     redrawCanvas();
