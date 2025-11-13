@@ -808,8 +808,8 @@
     </div>
 
     <script>
-        // Sample data for notes
-        let notesData = [
+        // Load notes from localStorage or use sample data
+        let notesData = JSON.parse(localStorage.getItem('notesData')) || [
             {
                 id: 1,
                 title: "Project Planning Notes",
@@ -834,6 +834,11 @@
                 ]
             }
         ];
+
+        // Save notes to localStorage
+        function saveNotesToStorage() {
+            localStorage.setItem('notesData', JSON.stringify(notesData));
+        }
 
         // State variables
         let currentImageFiles = [];
@@ -1100,6 +1105,9 @@
                 notesData.unshift(newNote);
             }
             
+            // Save to localStorage
+            saveNotesToStorage();
+            
             cancelNote();
             renderNotes();
         }
@@ -1115,6 +1123,8 @@
         function deleteNote() {
             if (noteToDelete) {
                 notesData = notesData.filter(note => note.id !== noteToDelete);
+                // Save to localStorage
+                saveNotesToStorage();
                 renderNotes();
                 confirmationModal.classList.remove('active');
                 noteToDelete = null;
