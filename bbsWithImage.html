@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes & Images Comparison</title>
+    <title>Notes & Images Comparison - Permanent Storage</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
             color: #333;
             min-height: 100vh;
             padding: 20px;
@@ -92,6 +92,7 @@
             font-size: 1.15rem;
             transition: border-color 0.4s ease, box-shadow 0.4s ease;
             font-weight: 500;
+            background: #f8fafc;
         }
 
         .form-input:focus, .form-textarea:focus {
@@ -123,11 +124,6 @@
         .image-upload-container:hover {
             background: #e0e7ff;
             border-color: #4f46e5;
-        }
-
-        .image-upload-container.drag-over {
-            background: #c7d2fe;
-            border-color: #4338ca;
         }
 
         .image-preview-container {
@@ -205,11 +201,6 @@
             color: #4a5568;
         }
 
-        .btn-delete {
-            background: linear-gradient(135deg, #ff4757 0%, #ff6b81 100%);
-            color: white;
-        }
-
         .btn-primary:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.6);
@@ -218,11 +209,6 @@
         .btn-secondary:hover {
             transform: translateY(-4px);
             background: linear-gradient(135deg, #cbd5e1 0%, #a0aec0 100%);
-        }
-
-        .btn-delete:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.6);
         }
 
         /* Notes Panel */
@@ -235,7 +221,7 @@
 
         .panel-header {
             padding: 25px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
             color: white;
             display: flex;
             align-items: center;
@@ -251,7 +237,7 @@
         .add-btn {
             background: white;
             border: none;
-            color: #667eea;
+            color: #1a2a6c;
             padding: 10px 20px;
             border-radius: 25px;
             font-weight: 700;
@@ -288,7 +274,7 @@
             background: #ffffff;
             border-radius: 25px;
             padding: 35px;
-            border-left: 6px solid #667eea;
+            border-left: 6px solid #1a2a6c;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
             cursor: pointer;
             position: relative;
@@ -298,35 +284,6 @@
         .note-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 35px rgba(0,0,0,0.22);
-        }
-
-        .delete-note-btn {
-            position: absolute;
-            top: 25px;
-            right: 25px;
-            background: #ff4757;
-            color: white;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            z-index: 10;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .note-card:hover .delete-note-btn {
-            opacity: 1;
-        }
-
-        .delete-note-btn:hover {
-            transform: scale(1.1);
-            background: #ff2e43;
         }
 
         .note-content {
@@ -397,203 +354,17 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        /* Details Modal */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 25px;
-            max-width: 1500px;
-            width: 95%;
-            max-height: 95vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-        }
-
-        .modal-header {
-            padding: 25px 35px;
-            background: linear-gradient(135deg, #2c3e50 0%, #1a1a2e 100%);
+        /* Permanent storage indicator */
+        .permanent-badge {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
             color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-close {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: white;
-            font-size: 1.8rem;
-            cursor: pointer;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s ease;
-        }
-
-        .modal-close:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .modal-body {
-            padding: 40px;
-            overflow-y: auto;
-            display: flex;
-            gap: 50px;
-        }
-
-        .modal-image-section {
-            flex: 1;
-        }
-
-        .modal-note-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .modal-images {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-bottom: 30px;
-            justify-content: center;
-        }
-
-        .modal-image-item {
-            width: 500px;
-            height: 500px;
+            padding: 5px 10px;
             border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-        }
-
-        .modal-image-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .modal-text {
-            line-height: 1.8;
-            color: #333;
-            font-size: 1.25rem;
-        }
-
-        .modal-note-content h3 {
-            margin-bottom: 30px;
-            color: #2c3e50;
-            font-size: 2.4rem;
-            font-weight: 800;
-        }
-
-        .modal-note-content p {
-            margin-bottom: 30px;
-            color: #5a6268;
-            font-size: 1.3rem;
-            font-weight: 500;
-        }
-
-        .modal-meta {
-            color: #7a8288;
-            font-size: 1.2rem;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-
-        .modal-tags {
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-            margin-top: 25px;
-        }
-
-        .modal-tag {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Confirmation Modal */
-        .confirmation-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .confirmation-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .confirmation-content {
-            background: white;
-            border-radius: 22px;
-            padding: 45px;
-            max-width: 600px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .confirmation-content h3 {
-            margin-bottom: 25px;
-            color: #2c3e50;
-            font-size: 2rem;
-            font-weight: 800;
-        }
-
-        .confirmation-content p {
-            margin-bottom: 40px;
-            color: #5a6268;
-            font-size: 1.3rem;
-            line-height: 1.6;
-            font-weight: 500;
-        }
-
-        .confirmation-actions {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
 
         /* Responsive Design */
@@ -601,11 +372,6 @@
             .note-image {
                 width: 380px;
                 height: 380px;
-            }
-            
-            .modal-image-item {
-                width: 450px;
-                height: 450px;
             }
             
             .image-preview-item {
@@ -624,15 +390,6 @@
                 height: 320px;
             }
             
-            .modal-body {
-                flex-direction: column;
-            }
-            
-            .modal-image-item {
-                width: 100%;
-                height: 400px;
-            }
-            
             .image-preview-item {
                 width: 240px;
                 height: 240px;
@@ -643,10 +400,6 @@
             .note-image {
                 width: 100%;
                 height: 300px;
-            }
-            
-            .modal-image-item {
-                height: 350px;
             }
             
             .image-preview-item {
@@ -668,16 +421,12 @@
                 height: 250px;
             }
             
-            .modal-image-item {
-                height: 300px;
-            }
-            
             .image-preview-item {
                 width: 180px;
                 height: 180px;
             }
             
-            .form-actions, .confirmation-actions {
+            .form-actions {
                 flex-direction: column;
             }
             
@@ -685,16 +434,12 @@
                 width: 100%;
             }
             
-            .confirmation-content {
-                padding: 30px 20px;
-            }
-            
-            .modal-body {
-                padding: 25px 15px;
+            .panel-content {
+                padding: 15px;
             }
             
             .note-card h3 {
-                font-size: 1.8rem;
+                font-size: 1.6rem;
             }
         }
     </style>
@@ -703,7 +448,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-book-open"></i> Notes & Images Comparison</h1>
-            <p>Create notes with multiple large images</p>
+            <p>Create notes with multiple large images - Permanently Stored</p>
         </header>
 
         <!-- Create Note Form -->
@@ -735,7 +480,7 @@
                 <div class="form-group full">
                     <label class="form-label">Upload Images (up to 5 images, max 5MB each)</label>
                     <div class="image-upload-container" id="imageUploadContainer">
-                        <i class="fas fa-cloud-upload-alt" style="font-size: 60px; color: #667eea; margin-bottom: 20px;"></i>
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 60px; color: #1a2a6c; margin-bottom: 20px;"></i>
                         <p>Click to upload images or drag & drop</p>
                         <p style="font-size: 1.1rem; color: #6c757d; margin-top: 12px;">Supports JPG, PNG, GIF (Max 5MB each)</p>
                         <input type="file" id="imageUpload" accept="image/*" multiple style="display: none;">
@@ -756,7 +501,7 @@
             <div class="panel-header">
                 <div>
                     <i class="fas fa-sticky-note fa-2x"></i>
-                    <h2>Notes with Large Images</h2>
+                    <h2>Permanent Notes with Large Images</h2>
                 </div>
                 <button class="add-btn" id="addNoteBtn">
                     <i class="fas fa-plus"></i> Add Note
@@ -770,46 +515,9 @@
         </div>
     </div>
 
-    <!-- Modal for detailed view -->
-    <div class="modal" id="detailModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Detailed View</h3>
-                <button class="modal-close" id="closeModal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-image-section">
-                    <h4>Images</h4>
-                    <div class="modal-images" id="modalImages">
-                        <!-- Modal images will be added here -->
-                    </div>
-                </div>
-                <div class="modal-note-section">
-                    <div class="modal-note-content" id="modalNoteContent">
-                        <!-- Modal note content will be added here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Confirmation Modal -->
-    <div class="confirmation-modal" id="confirmationModal">
-        <div class="confirmation-content">
-            <h3>Delete Note</h3>
-            <p>Are you sure you want to delete this note? This action cannot be undone.</p>
-            <div class="confirmation-actions">
-                <button class="btn btn-delete" id="confirmDeleteBtn">Delete</button>
-                <button class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Load notes from localStorage or use sample data
-        let notesData = JSON.parse(localStorage.getItem('notesData')) || [
+        // Simulate permanent storage - notes cannot be deleted by users
+        let notesData = [
             {
                 id: 1,
                 title: "Project Planning Notes",
@@ -817,8 +525,8 @@
                 tags: ["project", "planning", "requirements"],
                 date: "2025-11-10",
                 images: [
-                    "https://placehold.co/1000x800/667eea/FFFFFF?text=Project+Planning+1",
-                    "https://placehold.co/1000x800/764ba2/FFFFFF?text=Project+Planning+2"
+                    "https://placehold.co/1000x800/1a2a6c/FFFFFF?text=Project+Planning+1",
+                    "https://placehold.co/1000x800/b21f1f/FFFFFF?text=Project+Planning+2"
                 ]
             },
             {
@@ -835,16 +543,6 @@
             }
         ];
 
-        // Save notes to localStorage
-        function saveNotesToStorage() {
-            localStorage.setItem('notesData', JSON.stringify(notesData));
-        }
-
-        // State variables
-        let currentImageFiles = [];
-        let editingNoteId = null;
-        let noteToDelete = null;
-
         // DOM Elements
         const createNoteForm = document.getElementById('createNoteForm');
         const notesList = document.getElementById('notesList');
@@ -858,18 +556,14 @@
         const imageUpload = document.getElementById('imageUpload');
         const imagePreviewContainer = document.getElementById('imagePreviewContainer');
         const imageUploadContainer = document.getElementById('imageUploadContainer');
-        const detailModal = document.getElementById('detailModal');
-        const closeModal = document.getElementById('closeModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalImages = document.getElementById('modalImages');
-        const modalNoteContent = document.getElementById('modalNoteContent');
-        const confirmationModal = document.getElementById('confirmationModal');
-        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
 
         // Set today's date as default
         const today = new Date().toISOString().split('T')[0];
         noteDate.value = today;
+
+        // State variables
+        let currentImageFiles = [];
+        let editingNoteId = null;
 
         // Initialize the page
         function init() {
@@ -877,7 +571,7 @@
             setupEventListeners();
         }
 
-        // Render notes with large images
+        // Render notes with large images - NO DELETE BUTTONS
         function renderNotes() {
             notesList.innerHTML = '';
             notesData.forEach(note => {
@@ -891,6 +585,7 @@
                 ).join('');
                 
                 noteElement.innerHTML = `
+                    <div class="permanent-badge">PERMANENT</div>
                     <div class="note-content">
                         <h3>${note.title}</h3>
                         <p>${note.content}</p>
@@ -905,65 +600,27 @@
                         <span><i class="far fa-calendar"></i> ${new Date(note.date).toLocaleDateString()}</span>
                         <span><i class="fas fa-images"></i> ${note.images.length} image${note.images.length !== 1 ? 's' : ''}</span>
                     </div>
-                    <button class="delete-note-btn" data-id="${note.id}">
-                        <i class="fas fa-trash"></i>
-                    </button>
                 `;
                 notesList.appendChild(noteElement);
+                
+                // Add click event to view note
                 noteElement.addEventListener('click', (e) => {
-                    if (!e.target.closest('.delete-note-btn') && !e.target.closest('.note-image')) {
-                        showNoteDetail(note);
+                    if (!e.target.closest('.note-image')) {
+                        // Show note detail (in a real app, this would be a modal)
+                        alert("Note details:\n\n" + note.content);
                     }
                 });
                 
-                // Add delete button event listener
-                const deleteBtn = noteElement.querySelector('.delete-note-btn');
-                deleteBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    noteToDelete = note.id;
-                    confirmationModal.classList.add('active');
-                });
-                
-                // Add click event to images for modal
+                // Add click event to images
                 const imageElements = noteElement.querySelectorAll('.note-image');
                 imageElements.forEach(img => {
                     img.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        showNoteDetail(note);
+                        // Show image full size (in a real app, this would be a modal)
+                        alert("Click on image to view full size (simulated)");
                     });
                 });
             });
-        }
-
-        // Show note detail in modal
-        function showNoteDetail(note) {
-            modalTitle.textContent = note.title;
-            
-            // Render images
-            modalImages.innerHTML = '';
-            note.images.forEach(image => {
-                const imageItem = document.createElement('div');
-                imageItem.className = 'modal-image-item';
-                imageItem.innerHTML = `<img src="${image}" alt="Note image">`;
-                modalImages.appendChild(imageItem);
-            });
-            
-            // Render note content
-            modalNoteContent.innerHTML = `
-                <h3>${note.title}</h3>
-                <p>${note.content}</p>
-                <div class="modal-meta">
-                    <i class="far fa-calendar"></i> ${new Date(note.date).toLocaleDateString()}
-                </div>
-                <div class="modal-tags">
-                    ${note.tags.map(tag => `<span class="modal-tag">#${tag}</span>`).join('')}
-                </div>
-                <div style="margin-top: 25px; color: #7a8288; font-size: 1.2rem; font-weight: 600;">
-                    <i class="fas fa-images"></i> ${note.images.length} image${note.images.length !== 1 ? 's' : ''}
-                </div>
-            `;
-            
-            detailModal.classList.add('active');
         }
 
         // Handle image upload
@@ -1080,7 +737,7 @@
             }
             
             if (editingNoteId) {
-                // Update existing note
+                // Update existing note (in a real app)
                 const noteIndex = notesData.findIndex(note => note.id === editingNoteId);
                 if (noteIndex !== -1) {
                     notesData[noteIndex] = {
@@ -1105,9 +762,6 @@
                 notesData.unshift(newNote);
             }
             
-            // Save to localStorage
-            saveNotesToStorage();
-            
             cancelNote();
             renderNotes();
         }
@@ -1117,18 +771,6 @@
             createNoteForm.style.display = 'none';
             editingNoteId = null;
             currentImageFiles = [];
-        }
-
-        // Delete note
-        function deleteNote() {
-            if (noteToDelete) {
-                notesData = notesData.filter(note => note.id !== noteToDelete);
-                // Save to localStorage
-                saveNotesToStorage();
-                renderNotes();
-                confirmationModal.classList.remove('active');
-                noteToDelete = null;
-            }
         }
 
         // Setup event listeners
@@ -1146,40 +788,6 @@
             imageUploadContainer.addEventListener('dragover', handleDragOver);
             imageUploadContainer.addEventListener('dragleave', handleDragLeave);
             imageUploadContainer.addEventListener('drop', handleDrop);
-            
-            // Close modal
-            closeModal.addEventListener('click', () => {
-                detailModal.classList.remove('active');
-            });
-            
-            // Close modal when clicking outside
-            detailModal.addEventListener('click', (e) => {
-                if (e.target === detailModal) {
-                    detailModal.classList.remove('active');
-                }
-            });
-            
-            // Close modal with Escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && detailModal.classList.contains('active')) {
-                    detailModal.classList.remove('active');
-                }
-            });
-            
-            // Confirmation modal buttons
-            confirmDeleteBtn.addEventListener('click', deleteNote);
-            cancelDeleteBtn.addEventListener('click', () => {
-                confirmationModal.classList.remove('active');
-                noteToDelete = null;
-            });
-            
-            // Close confirmation modal when clicking outside
-            confirmationModal.addEventListener('click', (e) => {
-                if (e.target === confirmationModal) {
-                    confirmationModal.classList.remove('active');
-                    noteToDelete = null;
-                }
-            });
         }
 
         // Initialize when DOM is loaded
