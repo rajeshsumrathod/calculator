@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes & Images</title>
+    <title>Notes & Images Comparison - Permanent Storage</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -42,6 +42,41 @@
             opacity: 0.9;
             max-width: 700px;
             margin: 0 auto;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: white;
+            color: #1a2a6c;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         /* Create Note Form */
@@ -201,6 +236,11 @@
             color: #4a5568;
         }
 
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
         .btn-primary:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.6);
@@ -209,6 +249,11 @@
         .btn-secondary:hover {
             transform: translateY(-4px);
             background: linear-gradient(135deg, #cbd5e1 0%, #a0aec0 100%);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.6);
         }
 
         /* Notes Panel */
@@ -276,14 +321,13 @@
             padding: 35px;
             border-left: 6px solid #1a2a6c;
             transition: transform 0.4s ease, box-shadow 0.4s ease;
-            cursor: pointer;
             position: relative;
             box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
 
         .note-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.22);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.18);
         }
 
         .note-content {
@@ -295,6 +339,11 @@
             margin-bottom: 20px;
             color: #2c3e50;
             font-weight: 800;
+            cursor: pointer;
+        }
+
+        .note-card h3:hover {
+            color: #4f46e5;
         }
 
         .note-card p {
@@ -320,6 +369,7 @@
             object-fit: cover;
             box-shadow: 0 12px 30px rgba(0,0,0,0.2);
             transition: transform 0.4s ease;
+            cursor: pointer;
         }
 
         .note-image:hover {
@@ -337,6 +387,45 @@
             border-top: 2px solid #e2e8f0;
         }
 
+        .note-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .note-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .note-btn-view {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .note-btn-delete {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .note-btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.4);
+        }
+
+        .note-btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+        }
+
         .note-tags {
             display: flex;
             gap: 15px;
@@ -352,6 +441,15 @@
             color: #4f46e5;
             font-weight: 600;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .note-tag:hover {
+            background: linear-gradient(135deg, #c7d2fe, #bfdbfe);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
         /* Permanent storage indicator */
@@ -365,6 +463,84 @@
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: bold;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .modal.show .modal-content {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .modal-header h3 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #7a8288;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: #f1f5f9;
+        }
+
+        .modal-body {
+            margin-bottom: 25px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #4a5568;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
         }
 
         /* Responsive Design */
@@ -394,6 +570,24 @@
                 width: 240px;
                 height: 240px;
             }
+            
+            .note-actions {
+                flex-direction: column;
+            }
+            
+            .note-btn {
+                width: 100%;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                max-width: 300px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -413,6 +607,10 @@
             
             .note-card {
                 padding: 25px;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
             }
         }
 
@@ -441,6 +639,10 @@
             .note-card h3 {
                 font-size: 1.6rem;
             }
+            
+            .form-title {
+                font-size: 1.8rem;
+            }
         }
         
         /* Storage indicator */
@@ -464,14 +666,59 @@
         .storage-indicator i {
             color: #1a2a6c;
         }
+        
+        /* Filter section */
+        .tag-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        
+        .tag-filter {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .tag-filter:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .tag-filter.active {
+            background: white;
+            color: #1a2a6c;
+        }
+        
+        .no-notes {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+            font-size: 1.3rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-book-open"></i> Rajesh Rathod Notes</h1>
-            <p>Quality Works Starts with Quality BBS</p>
+            <h1><i class="fas fa-book-open"></i> Notes & Images Comparison</h1>
+            <p>Create notes with multiple large images - Permanently Stored</p>
         </header>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn active" data-view="all">
+                <i class="fas fa-list"></i> All Notes
+            </button>
+            <button class="nav-btn" data-view="create">
+                <i class="fas fa-plus-circle"></i> Create Note
+            </button>
+        </div>
 
         <!-- Create Note Form -->
         <div class="create-note-form" id="createNoteForm">
@@ -523,13 +770,15 @@
             <div class="panel-header">
                 <div>
                     <i class="fas fa-sticky-note fa-2x"></i>
-                    <h2>Rajesh Rathod</h2>
+                    <h2>Permanent Notes with Large Images</h2>
                 </div>
                 <button class="add-btn" id="addNoteBtn">
                     <i class="fas fa-plus"></i> Add Note
                 </button>
             </div>
             <div class="panel-content">
+                <!-- Tag filters will be added here dynamically -->
+                <div class="tag-filters" id="tagFilters"></div>
                 <div class="notes-list" id="notesList">
                     <!-- Notes will be populated by JavaScript -->
                 </div>
@@ -537,9 +786,48 @@
         </div>
     </div>
     
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Deletion</h3>
+                <button class="close-modal" id="closeDeleteModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this note? This action cannot be undone.</p>
+                <p class="note-title-preview" style="font-weight: bold; margin-top: 10px; color: #2c3e50;"></p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">Delete Note</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- View Note Modal -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="viewNoteTitle">Note Title</h3>
+                <button class="close-modal" id="closeViewModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="viewNoteContent"></p>
+                <div class="note-tags" id="viewNoteTags"></div>
+                <div class="note-meta" style="margin-top: 20px;">
+                    <span><i class="far fa-calendar"></i> <span id="viewNoteDate"></span></span>
+                    <span><i class="fas fa-images"></i> <span id="viewNoteImageCount"></span></span>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="closeViewNoteBtn">Close</button>
+            </div>
+        </div>
+    </div>
+    
     <div class="storage-indicator">
         <i class="fas fa-save"></i>
-        <span>Rajesh Rathod</span>
+        <span>Permanent Storage: All data saved in localStorage</span>
     </div>
 
     <script>
@@ -571,14 +859,13 @@
             {
                 id: 3,
                 title: "Research Findings",
-                content: "User research indicates a preference for mobile-first design. Key pain points include navigation complexity and lack of personalization options.",
-                tags: ["research", "user-experience", "findings"],
+                content: "Key findings from user research sessions. Users prefer minimalistic interfaces with clear call-to-action buttons. Navigation should be intuitive with no more than 3 levels deep.",
+                tags: ["research", "findings", "user-experience"],
                 date: "2025-11-05",
                 images: [
-                    "https://placehold.co/1000x800/43e97b/FFFFFF?text=Research+Findings+1"
+                    "https://placehold.co/1000x800/4361ee/FFFFFF?text=Research+Findings"
                 ]
             }
-            
         ];
 
         // DOM Elements
@@ -594,7 +881,27 @@
         const imageUpload = document.getElementById('imageUpload');
         const imagePreviewContainer = document.getElementById('imagePreviewContainer');
         const imageUploadContainer = document.getElementById('imageUploadContainer');
-
+        const tagFilters = document.getElementById('tagFilters');
+        
+        // Modal elements
+        const deleteModal = document.getElementById('deleteModal');
+        const closeDeleteModal = document.getElementById('closeDeleteModal');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const noteTitlePreview = document.querySelector('.note-title-preview');
+        
+        const viewModal = document.getElementById('viewModal');
+        const closeViewModal = document.getElementById('closeViewModal');
+        const closeViewNoteBtn = document.getElementById('closeViewNoteBtn');
+        const viewNoteTitle = document.getElementById('viewNoteTitle');
+        const viewNoteContent = document.getElementById('viewNoteContent');
+        const viewNoteTags = document.getElementById('viewNoteTags');
+        const viewNoteDate = document.getElementById('viewNoteDate');
+        const viewNoteImageCount = document.getElementById('viewNoteImageCount');
+        
+        // Navigation elements
+        const navBtns = document.querySelectorAll('.nav-btn');
+        
         // Set today's date as default
         const today = new Date().toISOString().split('T')[0];
         noteDate.value = today;
@@ -602,6 +909,9 @@
         // State variables
         let currentImageFiles = [];
         let editingNoteId = null;
+        let noteToDelete = null;
+        let currentFilter = 'all';
+        let activeTagFilter = null;
 
         // Save data to localStorage
         function saveToStorage() {
@@ -612,6 +922,8 @@
         function init() {
             renderNotes();
             setupEventListeners();
+            updateTagFilters();
+            showView('all');
             
             // Show storage indicator briefly
             const storageIndicator = document.querySelector('.storage-indicator');
@@ -620,10 +932,30 @@
             }, 3000);
         }
 
-        // Render notes with large images - NO DELETE BUTTONS
+        // Render notes with large images and delete option
         function renderNotes() {
+            // Filter notes based on active tag
+            let filteredNotes = notesData;
+            if (activeTagFilter) {
+                filteredNotes = notesData.filter(note => 
+                    note.tags.includes(activeTagFilter)
+                );
+            }
+            
             notesList.innerHTML = '';
-            notesData.forEach(note => {
+            
+            if (filteredNotes.length === 0) {
+                notesList.innerHTML = `
+                    <div class="no-notes">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 20px; color: #cbd5e1;"></i>
+                        <p>No notes found with the selected filter${activeTagFilter ? ` for "${activeTagFilter}"` : ''}.</p>
+                        <button class="btn btn-secondary" style="margin-top: 20px;" onclick="clearTagFilter()">Clear Filter</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredNotes.forEach(note => {
                 const noteElement = document.createElement('div');
                 noteElement.className = 'note-card';
                 noteElement.dataset.id = note.id;
@@ -633,13 +965,18 @@
                     `<img src="${img}" alt="${note.title}" class="note-image">`
                 ).join('');
                 
+                // Create tags
+                const tagsHTML = note.tags.map(tag => 
+                    `<span class="note-tag" data-tag="${tag}">#${tag}</span>`
+                ).join('');
+                
                 noteElement.innerHTML = `
-                    <div class="permanent-badge">PERMANENT</div>
+                    <div class="permanent-badge">STORAGE</div>
                     <div class="note-content">
                         <h3>${note.title}</h3>
                         <p>${note.content}</p>
                         <div class="note-tags">
-                            ${note.tags.map(tag => `<span class="note-tag">#${tag}</span>`).join('')}
+                            ${tagsHTML}
                         </div>
                     </div>
                     <div class="note-images">
@@ -649,41 +986,92 @@
                         <span><i class="far fa-calendar"></i> ${new Date(note.date).toLocaleDateString()}</span>
                         <span><i class="fas fa-images"></i> ${note.images.length} image${note.images.length !== 1 ? 's' : ''}</span>
                     </div>
+                    <div class="note-actions">
+                        <button class="note-btn note-btn-view" data-id="${note.id}">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                        <button class="note-btn note-btn-delete" data-id="${note.id}">
+                            <i class="fas fa-trash-alt"></i> Delete Note
+                        </button>
+                    </div>
                 `;
                 notesList.appendChild(noteElement);
-                
-                // Add click event to view note
-                noteElement.addEventListener('click', (e) => {
-                    if (!e.target.closest('.note-image')) {
-                        // Show note detail (in a real app, this would be a modal)
-                        alert("Note details:\n\n" + note.content);
-                    }
-                });
-                
-                // Add click event to images
-                const imageElements = noteElement.querySelectorAll('.note-image');
-                imageElements.forEach(img => {
-                    img.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        // Show image full size (in a real app, this would be a modal)
-                        const modal = document.createElement('div');
-                        modal.innerHTML = `
-                            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: flex; justify-content: center; align-items: center;">
-                                <img src="${img.src}" style="max-width: 90%; max-height: 90%; object-fit: contain;">
-                                <button style="position: absolute; top: 20px; right: 20px; background: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer;">&times;</button>
-                            </div>
-                        `;
-                        document.body.appendChild(modal);
-                        
-                        modal.querySelector('button').addEventListener('click', () => {
-                            document.body.removeChild(modal);
-                        });
-                    });
-                });
             });
             
             // Save to localStorage after rendering
             saveToStorage();
+        }
+
+        // Update tag filters
+        function updateTagFilters() {
+            // Get all unique tags
+            const allTags = new Set();
+            notesData.forEach(note => {
+                note.tags.forEach(tag => allTags.add(tag));
+            });
+            
+            tagFilters.innerHTML = '';
+            
+            if (allTags.size === 0) return;
+            
+            // Add "All Tags" button
+            const allBtn = document.createElement('div');
+            allBtn.className = 'tag-filter';
+            allBtn.textContent = 'All Tags';
+            if (!activeTagFilter) {
+                allBtn.classList.add('active');
+            }
+            allBtn.addEventListener('click', () => {
+                activeTagFilter = null;
+                renderNotes();
+                updateTagFilters();
+            });
+            tagFilters.appendChild(allBtn);
+            
+            // Add tag buttons
+            allTags.forEach(tag => {
+                const tagBtn = document.createElement('div');
+                tagBtn.className = 'tag-filter';
+                tagBtn.textContent = `#${tag}`;
+                if (activeTagFilter === tag) {
+                    tagBtn.classList.add('active');
+                }
+                tagBtn.addEventListener('click', () => {
+                    activeTagFilter = tag;
+                    renderNotes();
+                    updateTagFilters();
+                });
+                tagFilters.appendChild(tagBtn);
+            });
+        }
+
+        // Clear tag filter
+        window.clearTagFilter = function() {
+            activeTagFilter = null;
+            renderNotes();
+            updateTagFilters();
+        };
+
+        // Show specific view
+        function showView(view) {
+            // Update navigation buttons
+            navBtns.forEach(btn => {
+                if (btn.dataset.view === view) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            // Show/hide elements
+            if (view === 'create') {
+                createNoteForm.style.display = 'block';
+                createNoteForm.scrollIntoView({ behavior: 'smooth' });
+                notesList.closest('.notes-panel').style.display = 'none';
+            } else {
+                createNoteForm.style.display = 'none';
+                notesList.closest('.notes-panel').style.display = 'block';
+            }
         }
 
         // Handle image upload
@@ -775,16 +1163,13 @@
         // Show create note form
         function showCreateNoteForm() {
             editingNoteId = null;
-            createNoteForm.style.display = 'block';
             noteTitle.value = '';
             noteContent.value = '';
             noteTags.value = '';
             noteDate.value = today;
             currentImageFiles = [];
             imagePreviewContainer.innerHTML = '';
-            
-            // Scroll to form
-            createNoteForm.scrollIntoView({ behavior: 'smooth' });
+            showView('create');
         }
 
         // Save note
@@ -827,6 +1212,7 @@
             
             cancelNote();
             renderNotes();
+            updateTagFilters();
             
             // Show success indicator
             const storageIndicator = document.querySelector('.storage-indicator');
@@ -840,13 +1226,86 @@
 
         // Cancel note creation/editing
         function cancelNote() {
-            createNoteForm.style.display = 'none';
+            showView('all');
             editingNoteId = null;
             currentImageFiles = [];
         }
 
+        // Show delete confirmation modal
+        function showDeleteModal(noteId) {
+            const note = notesData.find(n => n.id == noteId);
+            if (!note) return;
+            
+            noteToDelete = noteId;
+            noteTitlePreview.textContent = `"${note.title}"`;
+            deleteModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Hide delete confirmation modal
+        function hideDeleteModal() {
+            deleteModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+            noteToDelete = null;
+        }
+
+        // Delete note
+        function deleteNote() {
+            if (noteToDelete === null) return;
+            
+            notesData = notesData.filter(note => note.id != noteToDelete);
+            renderNotes();
+            updateTagFilters();
+            hideDeleteModal();
+            
+            // Show success indicator
+            const storageIndicator = document.querySelector('.storage-indicator');
+            storageIndicator.innerHTML = '<i class="fas fa-check-circle"></i> <span>Note deleted successfully!</span>';
+            storageIndicator.style.backgroundColor = 'rgba(40, 167, 69, 0.9)';
+            setTimeout(() => {
+                storageIndicator.innerHTML = '<i class="fas fa-save"></i> <span>Permanent Storage: All data saved in localStorage</span>';
+                storageIndicator.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            }, 3000);
+        }
+
+        // Show note in modal
+        function showNoteModal(noteId) {
+            const note = notesData.find(n => n.id == noteId);
+            if (!note) return;
+            
+            viewNoteTitle.textContent = note.title;
+            viewNoteContent.textContent = note.content;
+            
+            // Set tags
+            viewNoteTags.innerHTML = note.tags.map(tag => 
+                `<span class="note-tag" style="margin: 5px;">#${tag}</span>`
+            ).join('');
+            
+            // Set date
+            viewNoteDate.textContent = new Date(note.date).toLocaleDateString();
+            
+            // Set image count
+            viewNoteImageCount.textContent = `${note.images.length} image${note.images.length !== 1 ? 's' : ''}`;
+            
+            viewModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Hide note modal
+        function hideViewModal() {
+            viewModal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
         // Setup event listeners
         function setupEventListeners() {
+            // Navigation buttons
+            navBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    showView(btn.dataset.view);
+                });
+            });
+            
             // Add note button
             addNoteBtn.addEventListener('click', showCreateNoteForm);
             
@@ -860,6 +1319,73 @@
             imageUploadContainer.addEventListener('dragover', handleDragOver);
             imageUploadContainer.addEventListener('dragleave', handleDragLeave);
             imageUploadContainer.addEventListener('drop', handleDrop);
+            
+            // Delete modal buttons
+            closeDeleteModal.addEventListener('click', hideDeleteModal);
+            cancelDeleteBtn.addEventListener('click', hideDeleteModal);
+            confirmDeleteBtn.addEventListener('click', deleteNote);
+            
+            // View modal buttons
+            closeViewModal.addEventListener('click', hideViewModal);
+            closeViewNoteBtn.addEventListener('click', hideViewModal);
+            
+            // Handle click events for dynamic elements
+            document.addEventListener('click', (e) => {
+                // Prevent full page selection when clicking tags
+                if (e.target.closest('.note-tag')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const tag = e.target.closest('.note-tag').dataset.tag;
+                    if (tag) {
+                        activeTagFilter = tag;
+                        renderNotes();
+                        updateTagFilters();
+                    }
+                    return;
+                }
+                
+                if (e.target.closest('.note-btn-delete')) {
+                    const noteId = e.target.closest('.note-btn-delete').dataset.id;
+                    showDeleteModal(noteId);
+                }
+                
+                if (e.target.closest('.note-btn-view')) {
+                    const noteId = e.target.closest('.note-btn-view').dataset.id;
+                    showNoteModal(noteId);
+                }
+                
+                if (e.target.closest('.note-image')) {
+                    const img = e.target.closest('.note-image');
+                    e.stopPropagation();
+                    // Show image full size (in a real app, this would be a modal)
+                    const modal = document.createElement('div');
+                    modal.innerHTML = `
+                        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: flex; justify-content: center; align-items: center;">
+                            <img src="${img.src}" style="max-width: 90%; max-height: 90%; object-fit: contain;">
+                            <button style="position: absolute; top: 20px; right: 20px; background: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer;">&times;</button>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                    
+                    modal.querySelector('button').addEventListener('click', () => {
+                        document.body.removeChild(modal);
+                    });
+                }
+                
+                // Click on note title to view details
+                if (e.target.closest('.note-card h3')) {
+                    const noteId = e.target.closest('.note-card').dataset.id;
+                    showNoteModal(noteId);
+                }
+            });
+            
+            // Prevent note card from being selected as a whole
+            document.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.note-card')) {
+                    e.preventDefault();
+                }
+            });
         }
 
         // Initialize when DOM is loaded
