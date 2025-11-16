@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes & Images Comparison - Permanent Storage</title>
+    <title>Notes & Images</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -442,13 +442,35 @@
                 font-size: 1.6rem;
             }
         }
+        
+        /* Storage indicator */
+        .storage-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #2c3e50;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+        }
+        
+        .storage-indicator i {
+            color: #1a2a6c;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-book-open"></i> Notes & Images Comparison</h1>
-            <p>Create notes with multiple large images - Permanently Stored</p>
+            <h1><i class="fas fa-book-open"></i> Rajesh Rathod Notes</h1>
+            <p>Quality Works Starts with Quality BBS</p>
         </header>
 
         <!-- Create Note Form -->
@@ -501,7 +523,7 @@
             <div class="panel-header">
                 <div>
                     <i class="fas fa-sticky-note fa-2x"></i>
-                    <h2>Permanent Notes with Large Images</h2>
+                    <h2>Rajesh Rathod</h2>
                 </div>
                 <button class="add-btn" id="addNoteBtn">
                     <i class="fas fa-plus"></i> Add Note
@@ -514,10 +536,15 @@
             </div>
         </div>
     </div>
+    
+    <div class="storage-indicator">
+        <i class="fas fa-save"></i>
+        <span>Rajesh Rathod</span>
+    </div>
 
     <script>
-        // Simulate permanent storage - notes cannot be deleted by users
-        let notesData = [
+        // Initialize notes data from localStorage or use default data
+        let notesData = JSON.parse(localStorage.getItem('permanentNotes')) || [
             {
                 id: 1,
                 title: "Project Planning Notes",
@@ -540,7 +567,18 @@
                     "https://placehold.co/1000x800/f5576c/FFFFFF?text=Design+Inspiration+2",
                     "https://placehold.co/1000x800/4facfe/FFFFFF?text=Design+Inspiration+3"
                 ]
+            },
+            {
+                id: 3,
+                title: "Research Findings",
+                content: "User research indicates a preference for mobile-first design. Key pain points include navigation complexity and lack of personalization options.",
+                tags: ["research", "user-experience", "findings"],
+                date: "2025-11-05",
+                images: [
+                    "https://placehold.co/1000x800/43e97b/FFFFFF?text=Research+Findings+1"
+                ]
             }
+            
         ];
 
         // DOM Elements
@@ -565,10 +603,21 @@
         let currentImageFiles = [];
         let editingNoteId = null;
 
+        // Save data to localStorage
+        function saveToStorage() {
+            localStorage.setItem('permanentNotes', JSON.stringify(notesData));
+        }
+
         // Initialize the page
         function init() {
             renderNotes();
             setupEventListeners();
+            
+            // Show storage indicator briefly
+            const storageIndicator = document.querySelector('.storage-indicator');
+            setTimeout(() => {
+                storageIndicator.style.opacity = '0.7';
+            }, 3000);
         }
 
         // Render notes with large images - NO DELETE BUTTONS
@@ -617,10 +666,24 @@
                     img.addEventListener('click', (e) => {
                         e.stopPropagation();
                         // Show image full size (in a real app, this would be a modal)
-                        alert("Click on image to view full size (simulated)");
+                        const modal = document.createElement('div');
+                        modal.innerHTML = `
+                            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 10000; display: flex; justify-content: center; align-items: center;">
+                                <img src="${img.src}" style="max-width: 90%; max-height: 90%; object-fit: contain;">
+                                <button style="position: absolute; top: 20px; right: 20px; background: white; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer;">&times;</button>
+                            </div>
+                        `;
+                        document.body.appendChild(modal);
+                        
+                        modal.querySelector('button').addEventListener('click', () => {
+                            document.body.removeChild(modal);
+                        });
                     });
                 });
             });
+            
+            // Save to localStorage after rendering
+            saveToStorage();
         }
 
         // Handle image upload
@@ -764,6 +827,15 @@
             
             cancelNote();
             renderNotes();
+            
+            // Show success indicator
+            const storageIndicator = document.querySelector('.storage-indicator');
+            storageIndicator.innerHTML = '<i class="fas fa-check-circle"></i> <span>Successfully saved!</span>';
+            storageIndicator.style.backgroundColor = 'rgba(40, 167, 69, 0.9)';
+            setTimeout(() => {
+                storageIndicator.innerHTML = '<i class="fas fa-save"></i> <span>Permanent Storage: All data saved in localStorage</span>';
+                storageIndicator.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+            }, 3000);
         }
 
         // Cancel note creation/editing
@@ -795,4 +867,3 @@
     </script>
 </body>
 </html>
-
