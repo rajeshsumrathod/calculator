@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes & Images - Professional Storage</title>
+    <title>Notes & Images</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -11,7 +11,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
@@ -19,31 +18,48 @@
             min-height: 100vh;
             padding: 20px;
         }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
         }
-
         header {
             text-align: center;
             margin-bottom: 30px;
             color: white;
         }
-
         header h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-
         header p {
             font-size: 1.2rem;
             opacity: 0.9;
             max-width: 700px;
             margin: 0 auto;
         }
-
+        /* Search Box */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        #searchInput {
+            width: 100%;
+            max-width: 600px;
+            padding: 14px 20px;
+            border: 3px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1.15rem;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+            font-weight: 500;
+            background: #f8fafc;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
         /* Navigation */
         .navigation {
             display: flex;
@@ -52,7 +68,6 @@
             margin-bottom: 30px;
             flex-wrap: wrap;
         }
-        
         .nav-btn {
             background: rgba(255, 255, 255, 0.15);
             border: none;
@@ -69,18 +84,15 @@
             min-width: 150px;
             justify-content: center;
         }
-        
         .nav-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
         }
-        
         .nav-btn.active {
             background: white;
             color: #1a2a6c;
             box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         }
-
         /* Create Note Form */
         .create-note-form {
             background: white;
@@ -90,7 +102,6 @@
             margin-bottom: 30px;
             display: none;
         }
-
         .form-title {
             font-size: 2.2rem;
             margin-bottom: 30px;
@@ -98,21 +109,17 @@
             text-align: center;
             font-weight: 800;
         }
-
         .form-row {
             display: flex;
             gap: 30px;
             margin-bottom: 25px;
         }
-
         .form-group {
             flex: 1;
         }
-
         .form-group.full {
             flex: 2;
         }
-
         .form-label {
             display: block;
             margin-bottom: 12px;
@@ -120,7 +127,6 @@
             color: #2c3e50;
             font-size: 1.2rem;
         }
-
         .form-input, .form-textarea {
             width: 100%;
             padding: 16px 20px;
@@ -131,18 +137,15 @@
             font-weight: 500;
             background: #f8fafc;
         }
-
         .form-input:focus, .form-textarea:focus {
             outline: none;
             border-color: #4f46e5;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
-
         .form-textarea {
             min-height: 180px;
             resize: vertical;
         }
-
         .image-upload-container {
             border: 4px dashed #667eea;
             border-radius: 20px;
@@ -157,12 +160,10 @@
             align-items: center;
             justify-content: center;
         }
-
         .image-upload-container:hover {
             background: #e0e7ff;
             border-color: #4f46e5;
         }
-
         .image-preview-container {
             display: flex;
             flex-wrap: wrap;
@@ -170,7 +171,6 @@
             margin-top: 30px;
             justify-content: center;
         }
-
         .image-preview-item {
             position: relative;
             width: 320px;
@@ -179,13 +179,11 @@
             overflow: hidden;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-
         .image-preview-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
         .remove-image-btn {
             position: absolute;
             top: -12px;
@@ -204,19 +202,16 @@
             z-index: 10;
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
-
         .remove-image-btn:hover {
             background: #dc2626;
             transform: scale(1.1);
         }
-
         .form-actions {
             display: flex;
             justify-content: center;
             gap: 25px;
             margin-top: 30px;
         }
-
         .btn {
             padding: 16px 45px;
             border: none;
@@ -227,37 +222,22 @@
             transition: all 0.4s ease;
             box-shadow: 0 6px 15px rgba(0,0,0,0.15);
         }
-
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
-
         .btn-secondary {
             background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
             color: #4a5568;
         }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-        }
-
         .btn-primary:hover {
             transform: translateY(-4px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.6);
         }
-
         .btn-secondary:hover {
             transform: translateY(-4px);
             background: linear-gradient(135deg, #cbd5e1 0%, #a0aec0 100%);
         }
-
-        .btn-danger:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.6);
-        }
-
         /* Notes Panel */
         .notes-panel {
             background: white;
@@ -265,7 +245,6 @@
             box-shadow: 0 15px 40px rgba(0,0,0,0.25);
             overflow: hidden;
         }
-
         .panel-header {
             padding: 25px;
             background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 100%);
@@ -275,12 +254,10 @@
             gap: 20px;
             justify-content: space-between;
         }
-
         .panel-header h2 {
             font-size: 1.8rem;
             font-weight: 700;
         }
-
         .add-btn {
             background: white;
             border: none;
@@ -296,27 +273,23 @@
             transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-
         .add-btn:hover {
             background: rgba(255,255,255,0.25);
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 6px 18px rgba(0,0,0,0.3);
         }
-
         .panel-content {
             padding: 30px;
             overflow-y: auto;
             min-height: 600px;
         }
-
         /* Notes Styling */
         .notes-list {
             display: flex;
             flex-direction: column;
             gap: 35px;
         }
-
         .note-card {
             background: #ffffff;
             border-radius: 25px;
@@ -325,31 +298,21 @@
             transition: transform 0.4s ease, box-shadow 0.4s ease;
             position: relative;
             box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-            cursor: default;
         }
-
         .note-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 30px rgba(0,0,0,0.18);
         }
-
         .note-content {
             margin-bottom: 25px;
         }
-
         .note-card h3 {
             font-size: 2.1rem;
             margin-bottom: 20px;
             color: #2c3e50;
             font-weight: 800;
-            cursor: pointer;
-            transition: color 0.2s ease;
+            /* Removed pointer cursor and hover effect */
         }
-
-        .note-card h3:hover {
-            color: #4f46e5;
-        }
-
         .note-card p {
             color: #5a6268;
             line-height: 1.8;
@@ -357,7 +320,6 @@
             margin-bottom: 25px;
             font-weight: 500;
         }
-
         .note-images {
             display: flex;
             flex-wrap: wrap;
@@ -365,7 +327,6 @@
             margin-top: 20px;
             justify-content: center;
         }
-
         .note-image {
             width: 420px;
             height: 420px;
@@ -375,11 +336,9 @@
             transition: transform 0.4s ease;
             cursor: pointer;
         }
-
         .note-image:hover {
             transform: scale(1.03);
         }
-
         .note-meta {
             display: flex;
             justify-content: space-between;
@@ -390,56 +349,12 @@
             padding-top: 20px;
             border-top: 2px solid #e2e8f0;
         }
-
-        .note-actions {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            justify-content: flex-end;
-        }
-
-        .note-btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.05rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 140px;
-            justify-content: center;
-        }
-
-        .note-btn-view {
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            color: white;
-        }
-
-        .note-btn-delete {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-        }
-
-        .note-btn-view:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .note-btn-delete:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-        }
-
         .note-tags {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
             margin-top: 15px;
         }
-
         .note-tag {
             background: linear-gradient(135deg, #e0e7ff, #dbeafe);
             padding: 10px 20px;
@@ -451,112 +366,12 @@
             cursor: pointer;
             transition: all 0.2s ease;
             user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
-        
         .note-tag:hover {
             background: linear-gradient(135deg, #c7d2fe, #bfdbfe);
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
-
-        /* Permanent storage indicator */
-        .storage-badge {
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 600px;
-            width: 90%;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.5);
-            transform: translateY(20px);
-            opacity: 0;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                        opacity 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .modal.show .modal-content {
-            display: block;
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .modal-header h3 {
-            color: #2c3e50;
-            font-size: 1.8rem;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: #7a8288;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        .close-modal:hover {
-            background: #f1f5f9;
-            color: #4a5568;
-        }
-
-        .modal-body {
-            margin-bottom: 25px;
-            font-size: 1.2rem;
-            line-height: 1.7;
-            color: #4a5568;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: flex-end;
-        }
-
         /* Filter section */
         .tag-filters {
             display: flex;
@@ -565,7 +380,6 @@
             margin: 20px 0 30px;
             justify-content: center;
         }
-        
         .tag-filter {
             background: rgba(255, 255, 255, 0.2);
             color: white;
@@ -579,204 +393,114 @@
             align-items: center;
             gap: 8px;
         }
-        
         .tag-filter:hover {
             background: rgba(255, 255, 255, 0.3);
         }
-        
         .tag-filter.active {
             background: white;
             color: #1a2a6c;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        
         .no-notes {
             text-align: center;
             padding: 50px 20px;
             color: #64748b;
             font-size: 1.4rem;
         }
-        
         .no-notes i {
             font-size: 4rem;
             margin-bottom: 20px;
             color: #cbd5e1;
         }
-        
-        .no-notes-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-        
-        .no-notes-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
-        }
-
         /* Responsive Design */
         @media (max-width: 1200px) {
             .note-image {
                 width: 380px;
                 height: 380px;
             }
-            
             .image-preview-item {
                 width: 280px;
                 height: 280px;
             }
         }
-
         @media (max-width: 992px) {
             .note-images {
                 justify-content: center;
             }
-            
             .note-image {
                 width: 320px;
                 height: 320px;
             }
-            
             .image-preview-item {
                 width: 240px;
                 height: 240px;
             }
-            
-            .note-actions {
-                flex-direction: column;
-                justify-content: center;
-            }
-            
-            .note-btn {
-                width: 100%;
-            }
-            
             .navigation {
                 flex-direction: column;
                 align-items: center;
             }
-            
             .nav-btn {
                 width: 100%;
                 max-width: 300px;
             }
         }
-
         @media (max-width: 768px) {
             .note-image {
                 width: 100%;
                 height: 300px;
             }
-            
             .image-preview-item {
                 width: 200px;
                 height: 200px;
             }
-            
             .panel-content {
                 padding: 20px;
             }
-            
             .note-card {
                 padding: 25px;
             }
-            
             header h1 {
                 font-size: 2.2rem;
             }
-            
             .form-row {
                 flex-direction: column;
                 gap: 20px;
             }
-            
             .form-group.full {
                 flex: 1;
             }
         }
-
         @media (max-width: 480px) {
             .note-image {
                 height: 250px;
             }
-            
             .image-preview-item {
                 width: 180px;
                 height: 180px;
             }
-            
             .form-actions {
                 flex-direction: column;
             }
-            
             .btn {
                 width: 100%;
             }
-            
             .panel-content {
                 padding: 15px;
             }
-            
             .note-card h3 {
                 font-size: 1.6rem;
             }
-            
             .form-title {
                 font-size: 1.8rem;
             }
-            
-            .note-actions {
-                flex-direction: row;
+            .search-container {
+                padding: 0 10px;
             }
-            
-            .note-btn {
-                padding: 10px 16px;
+            #searchInput {
+                padding: 12px 16px;
                 font-size: 1rem;
-                min-width: auto;
             }
         }
-        
-        /* Storage indicator */
-        .storage-indicator {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 12px 20px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            color: #2c3e50;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            transition: all 0.4s ease;
-        }
-        
-        .storage-indicator.success {
-            background: rgba(40, 167, 69, 0.95);
-            color: white;
-        }
-        
-        .storage-indicator i {
-            color: #1a2a6c;
-            font-size: 1.2rem;
-        }
-        
-        .storage-indicator.success i {
-            color: white;
-        }
-        
         /* Image modal */
         .image-modal {
             position: fixed;
@@ -793,12 +517,10 @@
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        
         .image-modal.show {
             opacity: 1;
             visibility: visible;
         }
-        
         .image-modal-content {
             max-width: 90%;
             max-height: 90%;
@@ -806,7 +528,6 @@
             border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        
         .image-modal-close {
             position: absolute;
             top: 20px;
@@ -824,37 +545,8 @@
             justify-content: center;
             transition: background 0.3s ease;
         }
-        
         .image-modal-close:hover {
             background: rgba(0,0,0,0.8);
-        }
-        
-        /* Loading indicator */
-        .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.8);
-            z-index: 12000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(102, 126, 234, 0.2);
-            border-top: 5px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -862,10 +554,13 @@
         <a href="https://rajeshsumrathod.github.io/calculator/bbsWithImage.html" style="color: blue;text-decoration: none;font-size: 18px;">Home</a>
     <div class="container">
         <header>
-            <h1><i class="fas fa-book-open"></i> Notes & Images Management</h1>
-            <p>Create, organize, and compare notes with multiple large images - Permanently Stored</p>
+            <h1><i class="fas fa-book-open"></i> Notes & Images</h1>
+            <p>Create and organize notes with multiple large images</p>
         </header>
-
+        <!-- Search Box -->
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search notes by title, content, or tags...">
+        </div>
         <!-- Navigation -->
         <div class="navigation">
             <button class="nav-btn active" data-view="all">
@@ -875,7 +570,6 @@
                 <i class="fas fa-plus-circle"></i> Create Note
             </button>
         </div>
-
         <!-- Create Note Form -->
         <div class="create-note-form" id="createNoteForm">
             <h2 class="form-title">Create New Note</h2>
@@ -920,13 +614,12 @@
                 <button class="btn btn-secondary" id="cancelNoteBtn">Cancel</button>
             </div>
         </div>
-
         <!-- Notes Panel -->
         <div class="notes-panel">
             <div class="panel-header">
                 <div>
                     <i class="fas fa-sticky-note fa-2x"></i>
-                    <h2>Permanent Notes with Large Images</h2>
+                    <h2>Notes with Large Images</h2>
                 </div>
                 <button class="add-btn" id="addNoteBtn">
                     <i class="fas fa-plus"></i> Add Note
@@ -941,75 +634,27 @@
             </div>
         </div>
     </div>
-    
-    <!-- Delete Confirmation Modal -->
-    <div class="modal" id="deleteModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Delete Note Confirmation</h3>
-                <button class="close-modal" id="closeDeleteModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this note? This action cannot be undone and all associated images will be permanently removed.</p>
-                <p class="note-title-preview" style="font-weight: bold; margin-top: 15px; color: #2c3e50; font-size: 1.2rem;"></p>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" id="cancelDeleteBtn">Cancel</button>
-                <button class="btn btn-danger" id="confirmDeleteBtn">Delete Note</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- View Note Modal -->
-    <div class="modal" id="viewModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="viewNoteTitle">Note Title</h3>
-                <button class="close-modal" id="closeViewModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p id="viewNoteContent"></p>
-                <div class="note-tags" id="viewNoteTags" style="margin-top: 20px;"></div>
-                <div class="note-meta" style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #e2e8f0;">
-                    <span><i class="far fa-calendar"></i> <span id="viewNoteDate"></span></span>
-                    <span><i class="fas fa-images"></i> <span id="viewNoteImageCount"></span></span>
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" id="closeViewNoteBtn">Close</button>
-            </div>
-        </div>
-    </div>
-    
     <!-- Image Modal -->
     <div class="image-modal" id="imageModal">
         <img class="image-modal-content" id="imageModalContent" src="" alt="Full size image">
         <button class="image-modal-close" id="imageModalClose">&times;</button>
     </div>
-    
-    <!-- Storage Indicator -->
-    <div class="storage-indicator" id="storageIndicator">
-        <i class="fas fa-save"></i>
-        <span>Permanent Storage: All data saved in localStorage</span>
-    </div>
-    
-    <!-- Loading Indicator -->
-    <div class="loading" id="loadingIndicator">
-        <div class="spinner"></div>
-    </div>
-
     <script>
-        // Initialize notes data from localStorage or use default data
-        let notesData = JSON.parse(localStorage.getItem('permanentNotes')) || [
+        // Initialize notes data with sample data (no localStorage)
+        let notesData = [
             {
                 id: 1,
-                title: "Project Planning Notes",
+                title: "Amrita  VAISHALI",
                 content: "Initial project requirements gathered from stakeholders. Key deliverables include user authentication, dashboard interface, and reporting features. Timeline: 6 weeks.",
                 tags: ["project", "planning", "requirements"],
                 date: "2025-11-10",
                 images: [
                     "https://placehold.co/1000x800/1a2a6c/FFFFFF?text=Project+Planning+1",
-                    "https://placehold.co/1000x800/b21f1f/FFFFFF?text=Project+Planning+2"
+                
+                    "data:image/jpeg;base64,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",
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY6t7FTMYddmqrx22R2Jl9KyPpNxcccOR2Erj4gDD0egSxAdsCbgBCXu_ql92oQVq0rdqsxkpX1TL3ecaRmdq9PlWCt_8DEtInMjGih6Or&s=10"
+    
+    
                 ]
             },
             {
@@ -1035,7 +680,6 @@
                 ]
             }
         ];
-
         // DOM Elements
         const createNoteForm = document.getElementById('createNoteForm');
         const notesList = document.getElementById('notesList');
@@ -1050,184 +694,88 @@
         const imagePreviewContainer = document.getElementById('imagePreviewContainer');
         const imageUploadContainer = document.getElementById('imageUploadContainer');
         const tagFilters = document.getElementById('tagFilters');
-        const storageIndicator = document.getElementById('storageIndicator');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        
+        const searchInput = document.getElementById('searchInput');
         // Modal elements
-        const deleteModal = document.getElementById('deleteModal');
-        const closeDeleteModal = document.getElementById('closeDeleteModal');
-        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-        const noteTitlePreview = document.querySelector('.note-title-preview');
-        
-        const viewModal = document.getElementById('viewModal');
-        const closeViewModal = document.getElementById('closeViewModal');
-        const closeViewNoteBtn = document.getElementById('closeViewNoteBtn');
-        const viewNoteTitle = document.getElementById('viewNoteTitle');
-        const viewNoteContent = document.getElementById('viewNoteContent');
-        const viewNoteTags = document.getElementById('viewNoteTags');
-        const viewNoteDate = document.getElementById('viewNoteDate');
-        const viewNoteImageCount = document.getElementById('viewNoteImageCount');
-        
         const imageModal = document.getElementById('imageModal');
         const imageModalContent = document.getElementById('imageModalContent');
         const imageModalClose = document.getElementById('imageModalClose');
-        
         // Navigation elements
         const navBtns = document.querySelectorAll('.nav-btn');
-        
         // Set today's date as default
         const today = new Date().toISOString().split('T')[0];
         noteDate.value = today;
-
         // State variables
         let currentImageFiles = [];
         let editingNoteId = null;
-        let noteToDelete = null;
         let activeTagFilter = null;
-
-        // Save data to localStorage
-        function saveToStorage() {
-            // Show loading indicator
-            showLoading(true);
-            
-            // Simulate async operation (in real app this would be actual async)
-            setTimeout(() => {
-                localStorage.setItem('permanentNotes', JSON.stringify(notesData));
-                showLoading(false);
-            }, 100);
-        }
-
-        // Show/hide loading indicator
-        function showLoading(show) {
-            if (show) {
-                loadingIndicator.style.display = 'flex';
-            } else {
-                loadingIndicator.style.display = 'none';
-            }
-        }
-
-        // Show storage indicator message
-        function showStorageMessage(message, isSuccess = false) {
-            storageIndicator.innerHTML = `
-                <i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-save'}"></i>
-                <span>${message}</span>
-            `;
-            storageIndicator.classList.toggle('success', isSuccess);
-            
-            // Reset after 3 seconds
-            setTimeout(() => {
-                storageIndicator.innerHTML = `
-                    <i class="fas fa-save"></i>
-                    <span>Permanent Storage: All data saved in localStorage</span>
-                `;
-                storageIndicator.classList.remove('success');
-            }, 3000);
-        }
-
         // Initialize the page
         function init() {
             renderNotes();
             setupEventListeners();
             updateTagFilters();
             showView('all');
-            
-            // Show initial storage message
-            setTimeout(() => {
-                storageIndicator.style.opacity = '0.8';
-            }, 3000);
         }
-
-        // Render notes with large images and delete option
+        // Render notes with large images (no delete/view buttons, no title link)
         function renderNotes() {
-            // Filter notes based on active tag
             let filteredNotes = notesData;
             if (activeTagFilter) {
                 filteredNotes = notesData.filter(note => 
                     note.tags.includes(activeTagFilter)
                 );
             }
-            
+            // Apply search filter
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            if (searchTerm) {
+                filteredNotes = filteredNotes.filter(note => 
+                    note.title.toLowerCase().includes(searchTerm) ||
+                    note.content.toLowerCase().includes(searchTerm) ||
+                    note.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+                );
+            }
             notesList.innerHTML = '';
-            
             if (filteredNotes.length === 0) {
-                notesList.innerHTML = `
-                    <div class="no-notes">
-                        <i class="fas fa-inbox"></i>
-                        <p>No notes found ${activeTagFilter ? `with tag "${activeTagFilter}"` : 'matching your criteria'}.</p>
-                        <button class="no-notes-btn" id="clearFilterBtn">
-                            <i class="fas fa-filter"></i> Clear Filter
-                        </button>
-                    </div>
+                const noNotesDiv = document.createElement('div');
+                noNotesDiv.className = 'no-notes';
+                noNotesDiv.innerHTML = `
+                    <i class="fas fa-inbox"></i>
+                    <p>No notes found.</p>
                 `;
-                document.getElementById('clearFilterBtn').addEventListener('click', () => {
-                    activeTagFilter = null;
-                    renderNotes();
-                    updateTagFilters();
-                });
+                notesList.appendChild(noNotesDiv);
                 return;
             }
-            
             filteredNotes.forEach(note => {
                 const noteElement = document.createElement('div');
                 noteElement.className = 'note-card';
                 noteElement.dataset.id = note.id;
-                
-                // Create images section
-                const imagesHTML = note.images.map(img => 
+                const imagesHTML = note.images.map(img =>
                     `<img src="${img}" alt="${note.title}" class="note-image">`
                 ).join('');
-                
-                // Create tags
-                const tagsHTML = note.tags.map(tag => 
+                const tagsHTML = note.tags.map(tag =>
                     `<span class="note-tag" data-tag="${tag}">#${tag}</span>`
                 ).join('');
-                
                 noteElement.innerHTML = `
-                    <div class="storage-badge">STORAGE</div>
                     <div class="note-content">
                         <h3>${note.title}</h3>
                         <p>${note.content}</p>
-                        <div class="note-tags">
-                            ${tagsHTML}
-                        </div>
+                        <div class="note-tags">${tagsHTML}</div>
                     </div>
-                    <div class="note-images">
-                        ${imagesHTML}
-                    </div>
+                    <div class="note-images">${imagesHTML}</div>
                     <div class="note-meta">
                         <span><i class="far fa-calendar"></i> ${new Date(note.date).toLocaleDateString()}</span>
                         <span><i class="fas fa-images"></i> ${note.images.length} image${note.images.length !== 1 ? 's' : ''}</span>
                     </div>
-                    <div class="note-actions">
-                        <button class="note-btn note-btn-view" data-id="${note.id}">
-                            <i class="fas fa-eye"></i> View Details
-                        </button>
-                        <button class="note-btn note-btn-delete" data-id="${note.id}">
-                            <i class="fas fa-trash-alt"></i> Delete Note
-                        </button>
-                    </div>
                 `;
                 notesList.appendChild(noteElement);
             });
-            
-            // Save to localStorage after rendering
-            saveToStorage();
         }
-
         // Update tag filters
         function updateTagFilters() {
-            // Get all unique tags
             const allTags = new Set();
             notesData.forEach(note => {
                 note.tags.forEach(tag => allTags.add(tag));
             });
-            
             tagFilters.innerHTML = '';
-            
             if (allTags.size === 0) return;
-            
-            // Add "All Tags" button
             const allBtn = document.createElement('div');
             allBtn.className = 'tag-filter';
             allBtn.innerHTML = '<i class="fas fa-tags"></i> All Tags';
@@ -1240,8 +788,6 @@
                 updateTagFilters();
             });
             tagFilters.appendChild(allBtn);
-            
-            // Add tag buttons
             allTags.forEach(tag => {
                 const tagBtn = document.createElement('div');
                 tagBtn.className = 'tag-filter';
@@ -1257,10 +803,8 @@
                 tagFilters.appendChild(tagBtn);
             });
         }
-
         // Show specific view
         function showView(view) {
-            // Update navigation buttons
             navBtns.forEach(btn => {
                 if (btn.dataset.view === view) {
                     btn.classList.add('active');
@@ -1268,44 +812,34 @@
                     btn.classList.remove('active');
                 }
             });
-            
-            // Show/hide elements
             if (view === 'create') {
                 createNoteForm.style.display = 'block';
-                notesList.closest('.notes-panel').style.display = 'block'; // Keep panel visible
-                // Scroll to form
+                notesList.closest('.notes-panel').style.display = 'block';
                 createNoteForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
                 createNoteForm.style.display = 'none';
                 notesList.closest('.notes-panel').style.display = 'block';
             }
         }
-
         // Handle image upload
         function handleImageUpload(e) {
             const files = Array.from(e.target.files);
             const validFiles = [];
-            
-            // Validate files
             for (let file of files) {
                 if (file.size > 5 * 1024 * 1024) {
-                    showStorageMessage(`File "${file.name}" exceeds 5MB limit!`, false);
+                    alert(`File "${file.name}" exceeds 5MB limit!`);
                     continue;
                 }
                 if (!file.type.match('image.*')) {
-                    showStorageMessage(`File "${file.name}" is not a valid image!`, false);
+                    alert(`File "${file.name}" is not a valid image!`);
                     continue;
                 }
                 validFiles.push(file);
             }
-            
-            // Check total image count
             if (validFiles.length + currentImageFiles.length > 5) {
-                showStorageMessage('Maximum 5 images allowed per note!', false);
+                alert('Maximum 5 images allowed per note!');
                 return;
             }
-            
-            // Process valid files
             validFiles.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -1315,7 +849,6 @@
                 reader.readAsDataURL(file);
             });
         }
-
         // Add image preview
         function addImagePreview(dataUrl) {
             const previewItem = document.createElement('div');
@@ -1327,17 +860,16 @@
                 </button>
             `;
             imagePreviewContainer.appendChild(previewItem);
-            
-            // Add remove event listener
             const removeBtn = previewItem.querySelector('.remove-image-btn');
             removeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const index = Array.from(imagePreviewContainer.children).indexOf(previewItem);
-                currentImageFiles.splice(index, 1);
+                const index = currentImageFiles.indexOf(dataUrl);
+                if (index !== -1) {
+                    currentImageFiles.splice(index, 1);
+                }
                 previewItem.remove();
             });
         }
-
         // Handle drag over
         function handleDragOver(e) {
             e.preventDefault();
@@ -1345,7 +877,6 @@
             imageUploadContainer.style.borderColor = '#4f46e5';
             imageUploadContainer.style.backgroundColor = '#e0e7ff';
         }
-
         // Handle drag leave
         function handleDragLeave(e) {
             e.preventDefault();
@@ -1353,13 +884,11 @@
             imageUploadContainer.style.borderColor = '#667eea';
             imageUploadContainer.style.backgroundColor = '#f1f5f9';
         }
-
         // Handle drop
         function handleDrop(e) {
             e.preventDefault();
             e.stopPropagation();
             handleDragLeave(e);
-            
             const files = e.dataTransfer.files;
             if (files.length) {
                 const dataTransfer = new DataTransfer();
@@ -1368,7 +897,6 @@
                 handleImageUpload({ target: imageUpload });
             }
         }
-
         // Show create note form
         function showCreateNoteForm() {
             editingNoteId = null;
@@ -1380,233 +908,100 @@
             imagePreviewContainer.innerHTML = '';
             showView('create');
         }
-
         // Save note
         function saveNote() {
             const title = noteTitle.value.trim();
             const content = noteContent.value.trim();
             const tags = noteTags.value.split(',').map(tag => tag.trim()).filter(tag => tag);
             const date = noteDate.value;
-            
             if (!title || !content) {
-                showStorageMessage('Please enter both title and content for your note.', false);
+                alert('Title and content are required.');
                 return;
             }
-            
-            if (editingNoteId) {
-                // Update existing note
-                const noteIndex = notesData.findIndex(note => note.id === editingNoteId);
-                if (noteIndex !== -1) {
-                    notesData[noteIndex] = {
-                        ...notesData[noteIndex],
-                        title,
-                        content,
-                        tags,
-                        date,
-                        images: currentImageFiles.length > 0 ? currentImageFiles : notesData[noteIndex].images
-                    };
+            const newImages = currentImageFiles.length > 0 
+                ? currentImageFiles 
+                : ['https://placehold.co/1000x800/cccccc/FFFFFF?text=No+Image'];
+            if (editingNoteId !== null) {
+                const idx = notesData.findIndex(n => n.id === editingNoteId);
+                if (idx !== -1) {
+                    notesData[idx] = { ...notesData[idx], title, content, tags, date, images: newImages };
                 }
             } else {
-                // Create new note
-                const newNote = {
-                    id: Date.now(),
-                    title,
-                    content,
-                    tags,
-                    date,
-                    images: currentImageFiles.length > 0 ? currentImageFiles : ['https://placehold.co/1000x800/cccccc/FFFFFF?text=No+Image']
-                };
-                notesData.unshift(newNote);
+                notesData.unshift({ id: Date.now(), title, content, tags, date, images: newImages });
             }
-            
             cancelNote();
             renderNotes();
             updateTagFilters();
-            showStorageMessage('Note saved successfully!', true);
         }
-
         // Cancel note creation/editing
         function cancelNote() {
             showView('all');
             editingNoteId = null;
             currentImageFiles = [];
+            imagePreviewContainer.innerHTML = '';
         }
-
-        // Show delete confirmation modal
-        function showDeleteModal(noteId) {
-            const note = notesData.find(n => n.id == noteId);
-            if (!note) return;
-            
-            noteToDelete = noteId;
-            noteTitlePreview.textContent = note.title;
-            deleteModal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Hide delete confirmation modal
-        function hideDeleteModal() {
-            deleteModal.classList.remove('show');
-            document.body.style.overflow = 'auto';
-            noteToDelete = null;
-        }
-
-        // Delete note
-        function deleteNote() {
-            if (noteToDelete === null) return;
-            
-            notesData = notesData.filter(note => note.id != noteToDelete);
-            renderNotes();
-            updateTagFilters();
-            hideDeleteModal();
-            showStorageMessage('Note deleted successfully!', true);
-        }
-
-        // Show note in modal
-        function showNoteModal(noteId) {
-            const note = notesData.find(n => n.id == noteId);
-            if (!note) return;
-            
-            viewNoteTitle.textContent = note.title;
-            viewNoteContent.textContent = note.content;
-            
-            // Set tags
-            viewNoteTags.innerHTML = note.tags.map(tag => 
-                `<span class="note-tag" style="margin: 5px; padding: 8px 16px; font-size: 1rem;">#${tag}</span>`
-            ).join('');
-            
-            // Set date
-            viewNoteDate.textContent = new Date(note.date).toLocaleDateString();
-            
-            // Set image count
-            viewNoteImageCount.textContent = `${note.images.length} image${note.images.length !== 1 ? 's' : ''}`;
-            
-            viewModal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Hide note modal
-        function hideViewModal() {
-            viewModal.classList.remove('show');
-            document.body.style.overflow = 'auto';
-        }
-
         // Show image in modal
         function showImageModal(src) {
             imageModalContent.src = src;
             imageModal.classList.add('show');
             document.body.style.overflow = 'hidden';
         }
-
         // Hide image modal
         function hideImageModal() {
             imageModal.classList.remove('show');
             document.body.style.overflow = 'auto';
         }
-
         // Setup event listeners
         function setupEventListeners() {
-            // Navigation buttons
             navBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     showView(btn.dataset.view);
                 });
             });
-            
-            // Add note button
             addNoteBtn.addEventListener('click', showCreateNoteForm);
-            
-            // Form buttons
             cancelNoteBtn.addEventListener('click', cancelNote);
             saveNoteBtn.addEventListener('click', saveNote);
-            
-            // Image upload
             imageUpload.addEventListener('change', handleImageUpload);
             imageUploadContainer.addEventListener('click', () => imageUpload.click());
             imageUploadContainer.addEventListener('dragover', handleDragOver);
             imageUploadContainer.addEventListener('dragleave', handleDragLeave);
             imageUploadContainer.addEventListener('drop', handleDrop);
-            
-            // Delete modal buttons
-            closeDeleteModal.addEventListener('click', hideDeleteModal);
-            cancelDeleteBtn.addEventListener('click', hideDeleteModal);
-            confirmDeleteBtn.addEventListener('click', deleteNote);
-            
-            // View modal buttons
-            closeViewModal.addEventListener('click', hideViewModal);
-            closeViewNoteBtn.addEventListener('click', hideViewModal);
-            
-            // Image modal buttons
             imageModalClose.addEventListener('click', hideImageModal);
             imageModal.addEventListener('click', (e) => {
                 if (e.target === imageModal) {
                     hideImageModal();
                 }
             });
-            
-            // Escape key to close modals
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
-                    if (deleteModal.classList.contains('show')) {
-                        hideDeleteModal();
-                    } else if (viewModal.classList.contains('show')) {
-                        hideViewModal();
-                    } else if (imageModal.classList.contains('show')) {
+                    if (imageModal.classList.contains('show')) {
                         hideImageModal();
                     }
                 }
             });
-            
-            // Handle click events for dynamic elements
             document.addEventListener('click', (e) => {
-                // Prevent full page selection when clicking tags
-                if (e.target.closest('.note-tag')) {
+                const tagEl = e.target.closest('.note-tag');
+                if (tagEl) {
                     e.preventDefault();
                     e.stopPropagation();
-                    
-                    const tag = e.target.closest('.note-tag').dataset.tag;
-                    if (tag) {
-                        activeTagFilter = tag;
-                        renderNotes();
-                        updateTagFilters();
-                    }
+                    activeTagFilter = tagEl.dataset.tag;
+                    renderNotes();
+                    updateTagFilters();
                     return;
                 }
-                
-                if (e.target.closest('.note-btn-delete')) {
-                    const noteId = e.target.closest('.note-btn-delete').dataset.id;
-                    showDeleteModal(noteId);
-                }
-                
-                if (e.target.closest('.note-btn-view')) {
-                    const noteId = e.target.closest('.note-btn-view').dataset.id;
-                    showNoteModal(noteId);
-                }
-                
-                if (e.target.closest('.note-image')) {
-                    const img = e.target.closest('.note-image');
-                    e.stopPropagation();
+                const img = e.target.closest('.note-image');
+                if (img) {
                     showImageModal(img.src);
+                    return;
                 }
-                
-                // Click on note title to view details
-                if (e.target.closest('.note-card h3')) {
-                    const noteId = e.target.closest('.note-card').dataset.id;
-                    showNoteModal(noteId);
-                }
+                // Note title is no longer clickable - removed this functionality
             });
-            
-            // Prevent note card from being selected as a whole
-            document.addEventListener('mousedown', (e) => {
-                if (e.target.closest('.note-card') && !e.target.closest('.note-tag') && 
-                    !e.target.closest('.note-btn') && !e.target.closest('.note-image')) {
-                    // Allow default behavior for note content
-                }
-            });
+            // Real-time search
+            searchInput.addEventListener('input', renderNotes);
         }
-
-        // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
+
 
